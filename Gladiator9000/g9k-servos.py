@@ -100,17 +100,17 @@ controller1 = {
     0:0,
     1:1,
     2:2,
-    x:servo_min,
-    y:servo_min,
-    z:servo_min
+    "x":servo_min,
+    "y":servo_min,
+    "z":servo_min
 }
 controller2 = {
     0:3,
     1:4,
     2:5,
-    x:servo_min,
-    y:servo_min,
-    z:servo_min
+    "x":servo_min,
+    "y":servo_min,
+    "z":servo_min
 }
 
 controller1["x"]=servo_max//2;

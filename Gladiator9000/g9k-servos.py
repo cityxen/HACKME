@@ -113,13 +113,13 @@ controller2 = {
     z:servo_min
 }
 
-controller1[x]=servo_max//2;
-controller1[y]=servo_max//2;
-controller1[z]=servo_max//2
+controller1["x"]=servo_max//2;
+controller1["y"]=servo_max//2;
+controller1["z"]=servo_max//2
 
-controller2[x]=servo_max//2;
-controller2[y]=servo_max//2;
-controller2[z]=servo_max//2;
+controller2["x"]=servo_max//2;
+controller2["y"]=servo_max//2;
+controller2["z"]=servo_max//2;
 
 # Print out a ready message
 ser1.write(b'CityXen Gladiator 9000 now active\n\r')
@@ -149,9 +149,9 @@ while True:
 
     if(c1[0]=="f"):
         print('C1 FIRE!')
-        controller1[z]+=20
-        if(controller1[z]>servo_max):
-            controller1[z]=servo_min
+        controller1["z"]+=20
+        if(controller1["z"]>servo_max):
+            controller1["z"]=servo_min
 
     pwm.set_pwm(controller1[2],0,controller1[z])
     # pwm.set_pwm(1,0,y)

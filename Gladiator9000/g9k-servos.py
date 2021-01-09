@@ -152,6 +152,17 @@ while True:
         controller1[z]+=20
         if(controller1[z]>servo_max):
             controller1[z]=servo_min
+
+    pwm.set_pwm(controller1[2],0,controller1[z])
+    # pwm.set_pwm(1,0,y)
+    # pwm.set_pwm(2,0,z)        
+
+    counter=counter+1
+    if counter > 1000:
+        ser.write(b'g9k listening\n\r')
+        print("g9k listening")
+        counter=0
+
 """
     if(right):
         x=x+5
@@ -174,16 +185,5 @@ while True:
             y=servo_min
         print('y=%d'%y)
 """
-    
-    pwm.set_pwm(controller1[2],0,controller1[z])
-    # pwm.set_pwm(1,0,y)
-    # pwm.set_pwm(2,0,z)        
-
-    counter=counter+1
-    if counter > 1000:
-        ser.write(b'g9k listening\n\r')
-        print("g9k listening")
-        counter=0
-
 
 

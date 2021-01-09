@@ -17,29 +17,67 @@
 # rs-232 Port 2:
 #
 # 
-#######################################################################################
+######################################################################################
+
 from __future__ import division
 import time
 import Adafruit_PCA9685
-import RPi.GPIO as GPIO
-print('Initializing...')
+import serial
+import argparse
+
+######################################################################################
+# Set up some default variables
+g9ksc_version  = "1.0"
+serial_device1 = "/dev/ttyAMA0"
+serial_baud1   = "19200"
+serial_device2 = "/dev/ttyUSB0"
+serial_baud2   = "19200"
+init_test     = False
+counter       = 0
+
+print("CityXen Gladiator 9000 Servo Controller Server %s - pass -h for help" % (g9ksc_version))
+
+######################################################################################
+# Parse arguments
+ap=argparse.ArgumentParser()
+ap.add_argument("-s1","--serial_device1",required=False,help="Serial 1 Device")
+ap.add_argument("-b1","--serial_baud1",required=False,help="Serial 1 Baud Rate")
+ap.add_argument("-s2","--serial_device2",required=False,help="Serial 2 Device")
+ap.add_argument("-b2","--serial_baud2",required=False,help="Serial 2 Baud Rate")
+ap.add_argument("-t","--init_test",required=False,help="Test all relays on startup")
+args=vars(ap.parse_args())
+if(args["serial_device1"]):
+    serial_device1=args["serial_device1"]
+if(args["serial_baud1"]):
+    serial_baud1 = args["serial_baud1"]
+if(args["serial_device2"]):
+    serial_device2=args["serial_device2"]
+if(args["serial_baud2"]):
+    serial_baud2 = args["serial_baud2"]
+if(args["init_test"]):
+    init_test   = True if (args["init_test"]=="1") else False
+
+######################################################################################
+# Set up serial device 1
+ser1 = serial.Serial(serial_device1,serial_baud1,
+    parity=serial.PARITY_NONE,stopbits=serial.STOPBITS_ONE,
+    bytesize=serial.EIGHTBITS,xonxoff=0,timeout=None,rtscts=0 )
+######################################################################################
+# Set up serial device 2
+ser2 = serial.Serial(serial_device2,serial_baud2,
+    parity=serial.PARITY_NONE,stopbits=serial.STOPBITS_ONE,
+    bytesize=serial.EIGHTBITS,xonxoff=0,timeout=None,rtscts=0)
+
+######################################################################################
 # Servo initialization stuff
 pwm = Adafruit_PCA9685.PCA9685() #pwm = Adafruit_PCA9685.PCA9685(address=0x41, busnum=2)
 # Configure min and max servo pulse lengths
 servo_min = 150 # 150 # Min pulse length out of 4096
 servo_max = 600 # 600 # Max pulse length out of 4096
 pwm.set_pwm_freq(60)# Set frequency to 60hz, good for servos.
-# GPIO initialization stuff
-GPIO.setmode(GPIO.BOARD) # Up, Down, left, right, fire
-chan_list = [7,11,13,15,16]
-GPIO.setup(chan_list, GPIO.IN, pull_up_down=GPIO.PUD_UP)
-# Joystick initialization stuff
-fire  = False
-up    = False
-down  = False
-left  = False
-right = False
-# Helper function to make setting a servo pulse width simpler.
+
+######################################################################################
+# Helper functions to make setting a servo pulse width simpler.
 def set_servo_pulse(channel, pulse):
     pulse_length = 1000000    # 1,000,000 us per second
     pulse_length //= 60       # 60 Hz
@@ -50,47 +88,74 @@ def set_servo_pulse(channel, pulse):
     pulse //= pulse_length
     pwm.set_pwm(channel, 0, pulse)
 
-def readJoystick():
-    global fire
-    fire = False
-    global up
-    up = False
-    global down
-    down = False
-    global left
-    left = False
-    global right
-    right = False
-    if(not(GPIO.input(7))):
-        fire  = True
-    if(not(GPIO.input(11))):
-        up    = True
-    if(not(GPIO.input(13))):
-        down  = True
-    if(not(GPIO.input(15))):
-        left  = True
-    if(not(GPIO.input(16))):
-        right = True
+
+######################################################################################
+# Some final preparation before server starts
 
 pwm.set_pwm(0,0,servo_min)
 pwm.set_pwm(1,0,servo_min)
 pwm.set_pwm(2,0,servo_min)
-time.sleep(2)
 
-x=servo_max//2;
-y=servo_max//2;
-z=servo_max//2;
+controller1 = {
+    0:0,
+    1:1,
+    2:2,
+    x:servo_min,
+    y:servo_min,
+    z:servo_min
+}
+controller2 = {
+    0:3,
+    1:4,
+    2:5,
+    x:servo_min,
+    y:servo_min,
+    z:servo_min
+}
 
+controller1[x]=servo_max//2;
+controller1[y]=servo_max//2;
+controller1[z]=servo_max//2
+
+controller2[x]=servo_max//2;
+controller2[y]=servo_max//2;
+controller2[z]=servo_max//2;
+
+# Print out a ready message
+ser1.write(b'CityXen Gladiator 9000 now active\n\r')
+ser2.write(b'CityXen Gladiator 9000 now active\n\r')
+print("CityXen Gladiator 9000 now active")
+print("Using configuration:")
+print("Serial 1:"+serial_device1+" at "+serial_baud1+" baud")
+print("Serial 2:"+serial_device2+" at "+serial_baud2+" baud")
+
+######################################################################################
+# TODO: Set up test sequence for this
+# Do or do not, there is no try...
+#if(init_test):
+#    print("Initialization Test")
+#    test_sequence() # Do a quick system test
+
+######################################################################################
+# Main server program, take input from serial, then send out to servos
 while True:
-    readJoystick()
-    if(fire):
-        print('FIRE!')
-        z=z+20
-        if(z>servo_max):
-            z=servo_min
+    # Do Server things
+    c1=ser1.readline().lstrip('\x00').rstrip("\x00\n\r")
+    if(len(c1)):
+        print("IN STRLEN:"+str(len(c1))+":"+c1)
+    c2=ser2.readline().lstrip('\x00').rstrip("\x00\n\r")
+    if(len(c2)):
+        print("IN STRLEN:"+str(len(c2))+":"+c2)
+
+    if(c1[0]=="f"):
+        print('C1 FIRE!')
+        controller1[z]+=20
+        if(controller1[z]>servo_max):
+            controller1[z]=servo_min
+"""
     if(right):
         x=x+5
-        if(x>servo_max):
+        if(x>4vo_max):
             x=servo_max
         print('x=%d'%x)
     if(left):
@@ -108,7 +173,17 @@ while True:
         if(y<servo_min):
             y=servo_min
         print('y=%d'%y)
-    pwm.set_pwm(0,0,x)
-    pwm.set_pwm(1,0,y)
-    pwm.set_pwm(2,0,z)
-    time.sleep(.02)
+"""
+    
+    pwm.set_pwm(controller1[2],0,controller1[z])
+    # pwm.set_pwm(1,0,y)
+    # pwm.set_pwm(2,0,z)        
+
+    counter=counter+1
+    if counter > 1000:
+        ser.write(b'g9k listening\n\r')
+        print("g9k listening")
+        counter=0
+
+
+

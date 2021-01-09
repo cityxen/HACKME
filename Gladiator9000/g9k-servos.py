@@ -29,9 +29,9 @@ import argparse
 # Set up some default variables
 g9ksc_version  = "1.0"
 serial_device1 = "/dev/ttyAMA0"
-serial_baud1   = "19200"
+serial_baud1   = "9600"
 serial_device2 = "/dev/ttyUSB0"
-serial_baud2   = "19200"
+serial_baud2   = "9600"
 init_test     = False
 counter       = 0
 
@@ -64,9 +64,11 @@ ser1 = serial.Serial(serial_device1,serial_baud1,
     bytesize=serial.EIGHTBITS,xonxoff=0,timeout=None,rtscts=0 )
 ######################################################################################
 # Set up serial device 2
+"""
 ser2 = serial.Serial(serial_device2,serial_baud2,
     parity=serial.PARITY_NONE,stopbits=serial.STOPBITS_ONE,
     bytesize=serial.EIGHTBITS,xonxoff=0,timeout=None,rtscts=0)
+"""
 
 ######################################################################################
 # Servo initialization stuff
@@ -121,13 +123,17 @@ controller2["x"]=servo_max//2;
 controller2["y"]=servo_max//2;
 controller2["z"]=servo_max//2;
 
+pwm.set_pwm(0,0,controller1["x"])
+pwm.set_pwm(1,0,controller1["y"])
+pwm.set_pwm(2,0,controller1["z"])
+
 # Print out a ready message
-ser1.write(b'CityXen Gladiator 9000 now active\n\r')
-ser2.write(b'CityXen Gladiator 9000 now active\n\r')
+ser1.println('CityXen Gladiator 9000 now active')
+# ser2.write(b'CityXen Gladiator 9000 now active\n\r')
 print("CityXen Gladiator 9000 now active")
 print("Using configuration:")
 print("Serial 1:"+serial_device1+" at "+serial_baud1+" baud")
-print("Serial 2:"+serial_device2+" at "+serial_baud2+" baud")
+# print("Serial 2:"+serial_device2+" at "+serial_baud2+" baud")
 
 ######################################################################################
 # TODO: Set up test sequence for this
@@ -142,10 +148,10 @@ while True:
     # Do Server things
     c1=ser1.readline().lstrip('\x00').rstrip("\x00\n\r")
     if(len(c1)):
-        print("IN STRLEN:"+str(len(c1))+":"+c1)
-    c2=ser2.readline().lstrip('\x00').rstrip("\x00\n\r")
-    if(len(c2)):
-        print("IN STRLEN:"+str(len(c2))+":"+c2)
+        print("SER1 IN STRLEN:"+str(len(c1))+":"+c1)
+    #c2=ser2.readline().lstrip('\x00').rstrip("\x00\n\r")
+    #if(len(c2)):
+    #    print("IN STRLEN:"+str(len(c2))+":"+c2)
 
     if(c1[0]=="f"):
         print('C1 FIRE!')
@@ -159,7 +165,7 @@ while True:
 
     counter=counter+1
     if counter > 1000:
-        ser.write(b'g9k listening\n\r')
+        ser1.write(b'g9k listening\n\r')
         print("g9k listening")
         counter=0
 

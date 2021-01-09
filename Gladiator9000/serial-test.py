@@ -43,9 +43,8 @@ if(args["serial_baud"]):
     serial_baud = args["serial_baud"]
 ######################################################################################
 # Set up serial device 1
-ser1 = serial.Serial(serial_device,serial_baud,
-    parity=serial.PARITY_NONE,stopbits=serial.STOPBITS_ONE,
-    bytesize=serial.EIGHTBITS,xonxoff=0,timeout=None,rtscts=0 )
+ser1 = serial.Serial(serial_device,serial_baud,timeout=None,
+    bytesize=serial.EIGHTBITS,xonxoff=0, parity=serial.PARITY_NONE,stopbits=serial.STOPBITS_ONE,rtscts=0 )
 
 # Print out a ready message
 ser1.write(b'CityXen Gladiator 9000 Test now active\n\r')

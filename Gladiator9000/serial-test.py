@@ -63,7 +63,7 @@ ser1 = serial.Serial(
     xonxoff=0,
     rtscts=0,
     timeout=None,
-    write_timeout=None
+    write_timeout=1
     )
 
 ######################################################################################
@@ -78,7 +78,7 @@ if serial_device2!="off":
         xonxoff=0,
         rtscts=0,
         timeout=None,
-        write_timeout=None
+        write_timeout=1
         )    
 
 # Print out a ready message

@@ -53,7 +53,8 @@ ser1 = serial.Serial(
     stopbits=serial.STOPBITS_ONE,
     xonxoff=1,
     rtscts=0,
-    timeout=1
+    timeout=None,
+    write_timeout=1
     )
 
 # Print out a ready message

@@ -132,21 +132,21 @@ def test_sequence(): # Turn on and off all dict values and then set the GPIO pin
     global gp3
     global gp4
     for i in gp2:
-	    print(i)
+	print(i)
         gp2[i]=False
         set_gpio()
         time.sleep(2)
         gp2[i]=True
         set_gpio()
     for i in gp3:
-	    print(i)
+	print(i)
         gp3[i]=False
         set_gpio()
         time.sleep(2)
         gp3[i]=True
         set_gpio()
     for i in gp4:
-	    print(i)
+	print(i)
         gp4[i]=False
         set_gpio()
         time.sleep(2)

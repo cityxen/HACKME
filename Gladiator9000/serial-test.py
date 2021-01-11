@@ -115,11 +115,11 @@ while True:
     # Do Server things
     c1=ser1.readline().lstrip('\x00').rstrip("\x00\n\r")
     if(len(c1)):
-        print("RECVd:"+str(len(c1))+":"+c1)
+        print("S1 RECVd:"+str(len(c1))+":"+c1)
     if serial_device2!="off":
         c2=ser2.readline().lstrip('\x00').rstrip("\x00\n\r")
         if(len(c2)):
-            print("RECVd:"+str(len(c2))+":"+c2)
+            print("S2 RECVd:"+str(len(c2))+":"+c2)
 
     counter=counter+1
     if counter > 100:

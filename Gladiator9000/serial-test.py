@@ -81,7 +81,6 @@ while True:
     # counter += 1
 
     counter1+=1
-    print(counter1)
     if counter1 > 19:
         ser1.write(b'%s Write counter: %d \n'%(hostname,counter1))
         counter1=0

@@ -59,9 +59,25 @@ if(args["init_test"]):
 
 ######################################################################################
 # Set up serial device 1
-ser1 = serial.Serial(serial_device1,serial_baud1,
-    parity=serial.PARITY_NONE,stopbits=serial.STOPBITS_ONE,
-    bytesize=serial.EIGHTBITS,xonxoff=0,timeout=None,rtscts=0 )
+ser1 = serial.Serial(serial_device,serial_baud,timeout=None,
+    bytesize=serial.EIGHTBITS,xonxoff=0, parity=serial.PARITY_NONE,stopbits=serial.STOPBITS_ONE,rtscts=0 )
+
+# Print out a ready message
+ser1.write(b'CityXen Gladiator 9000 now active\n\r')
+######################################################################################
+# Main server program, take input from serial, then send out to servos
+while True:
+    # Do Server things
+    c1=ser1.readline().lstrip('\x00').rstrip("\x00\n\r")
+    if(len(c1)):
+        print("SER1 IN STRLEN:"+str(len(c1))+":"+c1)
+
+    counter=counter+1
+    if counter > 1000:
+        ser1.write(b'g9k listening\n\r')
+        print("g9k listening")
+        counter=0
+
 ######################################################################################
 # Set up serial device 2
 """
@@ -127,8 +143,7 @@ pwm.set_pwm(0,0,controller1["x"])
 pwm.set_pwm(1,0,controller1["y"])
 pwm.set_pwm(2,0,controller1["z"])
 
-# Print out a ready message
-ser1.println('CityXen Gladiator 9000 now active')
+
 # ser2.write(b'CityXen Gladiator 9000 now active\n\r')
 print("CityXen Gladiator 9000 now active")
 print("Using configuration:")

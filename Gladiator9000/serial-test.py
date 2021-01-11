@@ -57,8 +57,13 @@ ser1 = serial.Serial(
     )
 
 # Print out a ready message
+#ser1.writelines("TEST\n")
+#ser1.write(b'CityXen Gladiator 9000 Test now active\n\r')
+
 # ser1.writelines("TEST\n")
 # ser1.write(b'CityXen Gladiator 9000 Test now active\n\r')
+
+ser1.write(b'CityXen Gladiator 9000 Test now active\n\r')
 
 print("CityXen Gladiator 9000 Test now active")
 print("Host: "+hostname)
@@ -70,6 +75,10 @@ counter1=0
 ######################################################################################
 # Main server program, take input from serial, then send out to servos
 while True:
+
+    # ser1.write(b'Write counter: %d \n'%(counter))
+    # counter += 1
+
     counter1 += 1
     if(counter1 >20):
         counter1 = 0

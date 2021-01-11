@@ -53,12 +53,12 @@ ser1 = serial.Serial(
     stopbits=serial.STOPBITS_ONE,
     xonxoff=1,
     rtscts=0,
-    timeout=None
+    timeout=1
     )
 
 # Print out a ready message
 # ser1.writelines("TEST\n")
-ser1.write(b'CityXen Gladiator 9000 Test now active\n\r')
+# ser1.write(b'CityXen Gladiator 9000 Test now active\n\r')
 
 print("CityXen Gladiator 9000 Test now active")
 print("Host: "+hostname)
@@ -73,7 +73,7 @@ while True:
     counter1 += 1
     if(counter1 >20):
         counter1 = 0
-        ser1.write(b'Write counter: %d \n'%(counter1))
+        ser1.write(b'%s Write counter: %d \n'%(hostname),(counter1))
 
     # Do Server things
     c1=ser1.readline().lstrip('\x00').rstrip("\x00\n\r")

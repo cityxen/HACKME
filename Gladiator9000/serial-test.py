@@ -20,6 +20,8 @@ from __future__ import division
 import time
 import serial
 import argparse
+import socket
+hostname=socket.gethostname()
 
 ######################################################################################
 # Set up some default variables
@@ -55,18 +57,33 @@ ser1 = serial.Serial(
     )
 
 # Print out a ready message
+<<<<<<< HEAD
 #ser1.writelines("TEST\n")
 #ser1.write(b'CityXen Gladiator 9000 Test now active\n\r')
+=======
+# ser1.writelines("TEST\n")
+ser1.write(b'CityXen Gladiator 9000 Test now active\n\r')
+>>>>>>> e976b202a70ee25264ac25cfa62ab130ee529071
 
 print("CityXen Gladiator 9000 Test now active")
+print("Host: "+hostname)
 print("Using configuration:")
 print("Serial:"+serial_device+" at "+serial_baud+" baud")
+
+counter1=0
 
 ######################################################################################
 # Main server program, take input from serial, then send out to servos
 while True:
+<<<<<<< HEAD
     # ser1.write(b'Write counter: %d \n'%(counter))
     # counter += 1
+=======
+    counter1 += 1
+    if(counter1 >20):
+        counter1 = 0
+        ser1.write(b'Write counter: %d \n'%(counter1))
+>>>>>>> e976b202a70ee25264ac25cfa62ab130ee529071
 
     # Do Server things
     c1=ser1.readline().lstrip('\x00').rstrip("\x00\n\r")
@@ -75,6 +92,10 @@ while True:
 
     counter=counter+1
     if counter > 100:
+<<<<<<< HEAD
         ser1.write(b'g9k test listening\n\r')
+=======
+        ser1.write(b' %s g9k test listening\n'%(hostname))
+>>>>>>> e976b202a70ee25264ac25cfa62ab130ee529071
         print("g9k test listening")
         counter=0

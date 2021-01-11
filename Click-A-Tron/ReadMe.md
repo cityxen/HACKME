@@ -12,8 +12,9 @@ Example:
 
 Usage:
 ```
-python bridge.py -b 9600 -t 1 -e 16B
-python bridge.py -b 19200 -t 1 -e 16B
+python Click-A-Tron.py -b 1200 -t 1 -e 16B
+python Click-A-Tron.py -b 9600 -t 1 -e 16B
+python Click-A-Tron.py -b 19200 -t 1 -e 16B
 ```
 
 

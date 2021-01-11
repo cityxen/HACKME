@@ -51,10 +51,9 @@ ser1 = serial.Serial(
     bytesize=serial.EIGHTBITS,
     parity=serial.PARITY_NONE,
     stopbits=serial.STOPBITS_ONE,
-    xonxoff=1,
+    xonxoff=0,
     rtscts=0,
-    timeout=None,
-    write_timeout=1
+    timeout=None
     )
 
 # Print out a ready message

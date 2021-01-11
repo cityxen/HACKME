@@ -45,7 +45,7 @@ import argparse
 
 # Set up some variables
 test_version    = "1.0"
-speed = .5
+speed = .3
 
 print("CityXen Gladiator 9000 Relay Test version %s" % (test_version))
 
@@ -134,6 +134,8 @@ def test_sequence(): # Turn on and off all dict values and then set the GPIO pin
 # Do or do not, there is no try...
 #if(init_test):
 print("Running Relay Board Test")
+
+#while(1):
 test_sequence() # Do a quick system test
 
 # Turn off all GPIO pins

@@ -1,31 +1,7 @@
 ##########################################################################################
-# CityXen 16 Relay Board Test Program
-# by Deadline
-#
-# NOTE: This is subject to heavy modification, especially the way it converts the signals
-# so don't presume that the state it is in now is the way it will stay
-#
-# Raspberry Pi (Any model with 40 GPIO should work)
-# https://amzn.to/34X5Xnj
-#
-# The Serial connector board is a MAX3232 based mini board with a 9 pin dsub
-# https://amzn.to/32G9Viv
-#
-# Null modem required to work with Amiga serial port
-# https://amzn.to/32BrHDC
-#
-# 8 Channel Relay Board
-# https://amzn.to/2Xwerh4
-#
-# Prototype Wiring
-# https://amzn.to/2LHDNX9
-#
-# GPIO Pins used for the serial device
-#
-# Pin 6  Ground
-# Pin 8  TXD
-# Pin 10 RXD
-# Pin 1  3 volt
+# Gladiator 9000 Relay Board Test Program
+# 
+# 2021 by Deadline
 #
 # GPIO Pins used for the Relay Boards
 #
@@ -69,6 +45,7 @@ import argparse
 
 # Set up some variables
 test_version    = "1.0"
+speed = .5
 
 print("CityXen Gladiator 9000 Relay Test version %s" % (test_version))
 
@@ -131,25 +108,26 @@ def test_sequence(): # Turn on and off all dict values and then set the GPIO pin
     global gp2
     global gp3
     global gp4
+    global speed
     for i in gp2:
 	print(i)
         gp2[i]=False
         set_gpio()
-        time.sleep(2)
+        time.sleep(speed)
         gp2[i]=True
         set_gpio()
     for i in gp3:
 	print(i)
         gp3[i]=False
         set_gpio()
-        time.sleep(2)
+        time.sleep(speed)
         gp3[i]=True
         set_gpio()
     for i in gp4:
 	print(i)
         gp4[i]=False
         set_gpio()
-        time.sleep(2)
+        time.sleep(speed)
         gp4[i]=True
         set_gpio()
 

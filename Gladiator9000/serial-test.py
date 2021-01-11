@@ -53,7 +53,7 @@ ser1 = serial.Serial(
     stopbits=serial.STOPBITS_ONE,
     xonxoff=0,
     rtscts=0,
-    timeout=None
+    timeout=.05
     )
 
 # Print out a ready message
@@ -77,22 +77,21 @@ counter1=0
 ######################################################################################
 # Main server program, take input from serial, then send out to servos
 while True:
-
     # ser1.write(b'Write counter: %d \n'%(counter))
     # counter += 1
 
-    counter1 += 1
-    if(counter1 >20):
-        counter1 = 0
+    counter1+=1
+    print(counter1)
+    if counter1 > 19:
         ser1.write(b'%s Write counter: %d \n'%(hostname,counter1))
+        counter1=0
 
     # Do Server things
     c1=ser1.readline().lstrip('\x00').rstrip("\x00\n\r")
     if(len(c1)):
-        print("SER IN STRLEN:"+str(len(c1))+":"+c1)
+        print("RECVd:"+str(len(c1))+":"+c1)
 
     counter=counter+1
     if counter > 100:
         ser1.write(b' %s g9k test listening\n'%(hostname))
-        print("g9k test listening")
         counter=0

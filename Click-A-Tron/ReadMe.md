@@ -1,7 +1,7 @@
 # 🌆🅲🅸🆃🆈🆇🅴🅽☯️ 8 & 16 bit hijinx and programming!
 
-# CLICK-A-TRON
-## (Raspberry Pi Serial Bridge)
+# Click-A-Tron
+## Raspberry Pi serial bridge middleware interface that allows vintage computers to use relay boards
 
 This is a python script that runs when the Raspberry Pi boots.
 

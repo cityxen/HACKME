@@ -20,6 +20,8 @@ from __future__ import division
 import time
 import serial
 import argparse
+import socket
+hostname=socket.gethostname()
 
 ######################################################################################
 # Set up some default variables
@@ -43,26 +45,43 @@ if(args["serial_baud"]):
     serial_baud = args["serial_baud"]
 ######################################################################################
 # Set up serial device 1
-ser1 = serial.Serial(serial_device,serial_baud,timeout=None,
-    bytesize=serial.EIGHTBITS,xonxoff=0, parity=serial.PARITY_NONE,stopbits=serial.STOPBITS_ONE,rtscts=0 )
+ser1 = serial.Serial(
+    serial_device,
+    serial_baud,
+    bytesize=serial.EIGHTBITS,
+    parity=serial.PARITY_NONE,
+    stopbits=serial.STOPBITS_ONE,
+    xonxoff=1,
+    rtscts=0,
+    timeout=None
+    )
 
 # Print out a ready message
+# ser1.writelines("TEST\n")
 ser1.write(b'CityXen Gladiator 9000 Test now active\n\r')
 
 print("CityXen Gladiator 9000 Test now active")
+print("Host: "+hostname)
 print("Using configuration:")
 print("Serial:"+serial_device+" at "+serial_baud+" baud")
+
+counter1=0
 
 ######################################################################################
 # Main server program, take input from serial, then send out to servos
 while True:
+    counter1 += 1
+    if(counter1 >20):
+        counter1 = 0
+        ser1.write(b'Write counter: %d \n'%(counter1))
+
     # Do Server things
     c1=ser1.readline().lstrip('\x00').rstrip("\x00\n\r")
     if(len(c1)):
         print("SER IN STRLEN:"+str(len(c1))+":"+c1)
 
     counter=counter+1
-    if counter > 1000:
-        ser.write(b'g9k test listening\n\r')
+    if counter > 100:
+        ser1.write(b' %s g9k test listening\n'%(hostname))
         print("g9k test listening")
         counter=0

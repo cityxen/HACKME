@@ -81,9 +81,8 @@ while True:
     # counter += 1
 
     counter1+=1
-    if counter1 > 19:
-        ser1.write(b'%s Write counter: %d \n'%(hostname,counter1))
-        counter1=0
+    # if counter1 > 5:
+    ser1.write(b'%s Write counter: %d \n'%(hostname,counter1))
 
     # Do Server things
     c1=ser1.readline().lstrip('\x00').rstrip("\x00\n\r")
@@ -92,5 +91,5 @@ while True:
 
     counter=counter+1
     if counter > 100:
-        ser1.write(b' %s g9k test listening\n'%(hostname))
+        ser1.write(b'%s g9k test listening\n'%(hostname))
         counter=0

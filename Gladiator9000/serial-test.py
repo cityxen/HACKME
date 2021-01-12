@@ -127,10 +127,9 @@ while True:
 
 
     # Write stuff
-    x=randrange(1000)
-    time.sleep(1)
+    x=randrange(1000) # simulate packets
     if x < 200:
-        print(x)
+        time.sleep(1)
         counter1+=1
         now = datetime.now()
         dt_string = now.strftime("%d/%m/%Y %H:%M:%S")

@@ -66,10 +66,9 @@ ser1 = serial.Serial(
     bytesize=serial.EIGHTBITS,
     parity=serial.PARITY_NONE,
     stopbits=serial.STOPBITS_ONE,
-    xonxoff=0,
+    xonxoff=True,
     rtscts=0,
-    timeout=1,
-    write_timeout=0
+    timeout=1
     )
 
 ######################################################################################
@@ -81,10 +80,9 @@ if serial_device2!="off":
         bytesize=serial.EIGHTBITS,
         parity=serial.PARITY_NONE,
         stopbits=serial.STOPBITS_ONE,
-        xonxoff=0,
+        xonxoff=True,
         rtscts=0,
-        timeout=1,
-        write_timeout=0
+        timeout=1
         )    
 
 outstring=hostname+" CityXen Gladiator 9000 Test now active\n"

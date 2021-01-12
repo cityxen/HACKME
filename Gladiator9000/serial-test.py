@@ -124,7 +124,7 @@ while True:
                 dprint("S2 RECVd:"+str(len(c2))+":"+c2)        
 
     # Write stuff
-    x=randrange(100000) # simulate packets
+    x=randrange(1000) # simulate packets
     if x < 200:
         # time.sleep(1)
         counter1+=1

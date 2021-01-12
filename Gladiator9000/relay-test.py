@@ -135,8 +135,8 @@ def test_sequence(): # Turn on and off all dict values and then set the GPIO pin
 #if(init_test):
 print("Running Relay Board Test")
 
-#while(1):
-test_sequence() # Do a quick system test
+while(1):
+    test_sequence() # Do a quick system test
 
 # Turn off all GPIO pins
 all_off()

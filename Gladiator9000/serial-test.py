@@ -68,7 +68,7 @@ ser1 = serial.Serial(
     stopbits=serial.STOPBITS_ONE,
     xonxoff=0,
     rtscts=0,
-    timeout=None
+    timeout=.00001
     )
 
 ######################################################################################
@@ -82,7 +82,7 @@ if serial_device2!="off":
         stopbits=serial.STOPBITS_ONE,
         xonxoff=0,
         rtscts=0,
-        timeout=None
+        timeout=.00001
         )    
 
 outstring=hostname+" CityXen Gladiator 9000 Test now active\n"
@@ -124,9 +124,9 @@ while True:
                 dprint("S2 RECVd:"+str(len(c2))+":"+c2)        
 
     # Write stuff
-    x=randrange(1000) # simulate packets
+    x=randrange(100000) # simulate packets
     if x < 200:
-        time.sleep(1)
+        # time.sleep(1)
         counter1+=1
         now = datetime.now()
         dt_string = now.strftime("%d/%m/%Y %H:%M:%S")

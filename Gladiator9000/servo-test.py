@@ -115,7 +115,7 @@ while(True):
         x=servo_min
         xdir=1
 
-    y=y+xdir
+    y=y+zdir
     if(y>servo_max):
         y=servo_max
         ydir=-1
@@ -123,7 +123,7 @@ while(True):
         y=servo_min
         ydir=1
 
-    z=z+xdir
+    z=z+zdir
     if(z>servo_max):
         z=servo_max
         zdir=-1

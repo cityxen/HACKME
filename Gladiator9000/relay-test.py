@@ -45,7 +45,7 @@ import argparse
 
 # Set up some variables
 test_version    = "1.0"
-speed = .3
+speed = .1
 
 print("CityXen Gladiator 9000 Relay Test version %s" % (test_version))
 

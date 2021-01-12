@@ -125,7 +125,6 @@ while True:
             #Do things with c2 input
             dprint("S2 RECVd:"+str(len(c2))+":"+c2)
 
-
     # Write stuff
     x=randrange(1000) # simulate packets
     if x < 200:
@@ -134,11 +133,13 @@ while True:
         now = datetime.now()
         dt_string = now.strftime("%d/%m/%Y %H:%M:%S")
         ser1.write(b'%s:%s Write counter: %d \n'%(dt_string,hostname,counter1))
-        counter=counter+1
-        if counter > 100:
-            now = datetime.now()
-            dt_string = now.strftime("%d/%m/%Y %H:%M:%S")
-            ser1.write(b'%s:%s g9k test listening\n'%(dt_string,hostname))
-            if serial_device2!="off":
-                ser2.write(b'%s:%s g9k test listening\n'%(dt_string,hostname))
-            counter=0
+
+    # Write heartbeat packet
+    counter=counter+1
+    if counter > 1000:
+        now = datetime.now()
+        dt_string = now.strftime("%d/%m/%Y %H:%M:%S")
+        ser1.write(b'%s:%s g9k test listening\n'%(dt_string,hostname))
+        if serial_device2!="off":
+            ser2.write(b'%s:%s g9k test listening\n'%(dt_string,hostname))
+        counter=0

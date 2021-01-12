@@ -21,10 +21,11 @@ import time
 import serial
 import argparse
 import socket
-hostname=socket.gethostname()
+from datetime import datetime
 
 ######################################################################################
 # Set up some default variables
+hostname=socket.gethostname()
 g9ksct_version = "1.0"
 serial_device  = "/dev/ttyUSB0"
 serial_baud    = "1200"
@@ -66,7 +67,7 @@ ser1 = serial.Serial(
     stopbits=serial.STOPBITS_ONE,
     xonxoff=0,
     rtscts=0,
-    timeout=1
+    timeout=None
     )
 
 ######################################################################################
@@ -80,7 +81,7 @@ if serial_device2!="off":
         stopbits=serial.STOPBITS_ONE,
         xonxoff=0,
         rtscts=0,
-        timeout=1
+        timeout=None
         )    
 
 outstring=hostname+" CityXen Gladiator 9000 Test now active\n"
@@ -99,7 +100,10 @@ counter1=0
 
 def dprint(x):
     if debug:
-        print(x)
+        # datetime object containing current date and time
+        now = datetime.now()
+        dt_string = now.strftime("%d/%m/%Y %H:%M:%S")
+        print(dt_string+":"+x)
 
 
 ######################################################################################
@@ -107,8 +111,9 @@ def dprint(x):
 while True:
     # Do Server things
     counter1+=1
-
-    ser1.write(b'%s Write counter: %d \n'%(hostname,counter1))
+    now = datetime.now()
+    dt_string = now.strftime("%d/%m/%Y %H:%M:%S")
+    ser1.write(b'%s:%s Write counter: %d \n'%(dt_string,hostname,counter1))
     c1=ser1.readline().lstrip('\x00').rstrip("\x00\n\r")
     if(len(c1)):
         # Do things with c1 input
@@ -123,7 +128,9 @@ while True:
 
     counter=counter+1
     if counter > 100:
-        ser1.write(b'%s g9k test listening\n'%(hostname))
+        now = datetime.now()
+        dt_string = now.strftime("%d/%m/%Y %H:%M:%S")
+        ser1.write(b'%s:%s g9k test listening\n'%(dt_string,hostname))
         if serial_device2!="off":
-            ser2.write(b'%s g9k test listening\n'%(hostname))
+            ser2.write(b'%s:%s g9k test listening\n'%(dt_string,hostname))
         counter=0

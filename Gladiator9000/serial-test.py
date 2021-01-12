@@ -66,7 +66,7 @@ ser1 = serial.Serial(
     bytesize=serial.EIGHTBITS,
     parity=serial.PARITY_NONE,
     stopbits=serial.STOPBITS_ONE,
-    xonxoff=True,
+    xonxoff=0,
     rtscts=0,
     timeout=1
     )
@@ -80,7 +80,7 @@ if serial_device2!="off":
         bytesize=serial.EIGHTBITS,
         parity=serial.PARITY_NONE,
         stopbits=serial.STOPBITS_ONE,
-        xonxoff=True,
+        xonxoff=0,
         rtscts=0,
         timeout=1
         )    

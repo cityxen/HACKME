@@ -90,9 +90,9 @@ pwm.set_pwm(0,0,servo_min)
 pwm.set_pwm(1,0,servo_min)
 pwm.set_pwm(2,0,servo_min)
 
-xdir=1
-ydir=1
-zdir=1
+xdir=5
+ydir=5
+zdir=5
 
 x=servo_max//2
 y=servo_max//2
@@ -110,26 +110,26 @@ while(True):
     x=x+xdir
     if(x>servo_max):
         x=servo_max
-        xdir=-1
+        xdir=-5
     if(x<servo_min):
         x=servo_min
-        xdir=1
+        xdir=5
 
     y=y+zdir
     if(y>servo_max):
         y=servo_max
-        ydir=-1
+        ydir=-5
     if(y<servo_min):
         y=servo_min
-        ydir=1
+        ydir=5
 
     z=z+zdir
     if(z>servo_max):
         z=servo_max
-        zdir=-1
+        zdir=-5
     if(z<servo_min):
         z=servo_min
-        zdir=1
+        zdir=5
 
     pwm.set_pwm(0,0,x)
     pwm.set_pwm(1,0,y)

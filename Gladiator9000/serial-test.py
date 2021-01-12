@@ -22,6 +22,7 @@ import serial
 import argparse
 import socket
 from datetime import datetime
+from random import randrange
 
 ######################################################################################
 # Set up some default variables
@@ -110,27 +111,31 @@ def dprint(x):
 # Main server program, take input from serial, then send out to servos
 while True:
     # Do Server things
-    counter1+=1
-    now = datetime.now()
-    dt_string = now.strftime("%d/%m/%Y %H:%M:%S")
-    ser1.write(b'%s:%s Write counter: %d \n'%(dt_string,hostname,counter1))
-    c1=ser1.readline().lstrip('\x00').rstrip("\x00\n\r")
-    if(len(c1)):
-        # Do things with c1 input
-        dprint("S1 RECVd:"+str(len(c1))+":"+c1)
-
-    if serial_device2!="off":
-        ser2.write(b'%s Write counter: %d \n'%(hostname,counter1))
-        c2=ser2.readline().lstrip('\x00').rstrip("\x00\n\r")
-        if(len(c2)):
-            #Do things with c2 input
-            dprint("S2 RECVd:"+str(len(c2))+":"+c2)
-
-    counter=counter+1
-    if counter > 100:
+    x=randrange(1000)
+    time.sleep(1)
+    if x < 200:
+        print(x)
+        counter1+=1
         now = datetime.now()
         dt_string = now.strftime("%d/%m/%Y %H:%M:%S")
-        ser1.write(b'%s:%s g9k test listening\n'%(dt_string,hostname))
+        ser1.write(b'%s:%s Write counter: %d \n'%(dt_string,hostname,counter1))
+        c1=ser1.readline().lstrip('\x00').rstrip("\x00\n\r")
+        if(len(c1)):
+            # Do things with c1 input
+            dprint("S1 RECVd:"+str(len(c1))+":"+c1)
+
         if serial_device2!="off":
-            ser2.write(b'%s:%s g9k test listening\n'%(dt_string,hostname))
-        counter=0
+            ser2.write(b'%s Write counter: %d \n'%(hostname,counter1))
+            c2=ser2.readline().lstrip('\x00').rstrip("\x00\n\r")
+            if(len(c2)):
+                #Do things with c2 input
+                dprint("S2 RECVd:"+str(len(c2))+":"+c2)
+
+        counter=counter+1
+        if counter > 100:
+            now = datetime.now()
+            dt_string = now.strftime("%d/%m/%Y %H:%M:%S")
+            ser1.write(b'%s:%s g9k test listening\n'%(dt_string,hostname))
+            if serial_device2!="off":
+                ser2.write(b'%s:%s g9k test listening\n'%(dt_string,hostname))
+            counter=0

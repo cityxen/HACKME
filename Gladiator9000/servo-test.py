@@ -4,9 +4,7 @@
 #
 # 2021 CityXen
 #
-#
 # https://github.com/adafruit/Adafruit_Python_PCA9685
-# Credit to Chris Swan https://github.com/cpswan/Python/blob/master/rpi-gpio-jstk.py
 #
 ######################################################################################
 
@@ -121,7 +119,7 @@ z2_dir=servo_speed
 servos_center()
 
 while(True):
-    # Put stuff here
+    # Loop servos
     for i in controllers:
         data=controllers[i]
         data["x"]=data["x"]+x1_dir

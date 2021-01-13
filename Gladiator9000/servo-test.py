@@ -26,6 +26,8 @@ controller1 = { "x_servo":0,"y_servo":1,"z_servo":2,"x":0,"y":0,"z":0 }
 controller2 = { "x_servo":3,"y_servo":4,"z_servo":5,"x":0,"y":0,"z":0 }
 controllers = { "1":controller1,"2":controller2 }
 
+print(controllers)
+
 print("CityXen Gladiator 9000 Servo Test %s - pass -h for help" % (g9kst_version))
 
 ######################################################################################
@@ -49,33 +51,33 @@ def servos_write():
     pwm.set_pwm(controller2["z_servo"],0,controller2["z"])
 
 def servos_max():
-    controller1["x_servo"]=servo_max
-    controller1["y_servo"]=servo_max
-    controller1["z_servo"]=servo_max
-    controller2["x_servo"]=servo_max
-    controller2["y_servo"]=servo_max
-    controller2["z_servo"]=servo_max
+    controller1["x"]=servo_max
+    controller1["y"]=servo_max
+    controller1["z"]=servo_max
+    controller2["x"]=servo_max
+    controller2["y"]=servo_max
+    controller2["z"]=servo_max
     servos_write()
     
 def servos_center():
-    controller1["x_servo"]=servo_center
-    controller1["y_servo"]=servo_center
-    controller1["z_servo"]=servo_center
-    controller2["x_servo"]=servo_center
-    controller2["y_servo"]=servo_center
-    controller2["z_servo"]=servo_center
+    controller1["x"]=servo_center
+    controller1["y"]=servo_center
+    controller1["z"]=servo_center
+    controller2["x"]=servo_center
+    controller2["y"]=servo_center
+    controller2["z"]=servo_center
     servos_write()
 
 def servos_min():
-    controller1["x_servo"]=servo_min
-    controller1["y_servo"]=servo_min
-    controller1["z_servo"]=servo_min
-    controller2["x_servo"]=servo_min
-    controller2["y_servo"]=servo_min
-    controller2["z_servo"]=servo_min
+    controller1["x"]=servo_min
+    controller1["y"]=servo_min
+    controller1["z"]=servo_min
+    controller2["x"]=servo_min
+    controller2["y"]=servo_min
+    controller2["z"]=servo_min
     servos_write()
 
-def set_servo_pulse(channel, pulse):
+def set_pulse(channel, pulse):
     pulse_length = 1000000    # 1,000,000 us per second
     pulse_length //= 60       # 60 Hz
     print('{0}us per period'.format(pulse_length))
@@ -120,32 +122,29 @@ servos_center()
 
 while(True):
     # Put stuff here
-    # outstr="x:%d y:%d z:%d xdir:%d ydir:%d zdir:%d"%(x,y,z,xdir,ydir,zdir)
-    # print(outstr)
-
-    for controller in controllers:
-        print(controller)
-        controller["x"]+=x1_dir
-        if(controller["x"]>servo_max):
-            controller["x"]=servo_max
+    for i in controllers:
+        data=controllers[i]
+        data["x"]=data["x"]+x1_dir
+        if(data["x"]>servo_max):
+            data["x"]=servo_max
             x1_dir=-(servo_speed//2)
-        if(controller["x"]<servo_min):
-            controller["x"]=servo_min
+        if(data["x"]<servo_min):
+            data["x"]=servo_min
             x1_dir=servo_speed
-        controller["y"]+=y1_dir
-        if(controller["y"]>servo_max):
-            controller["y"]=servo_max
+        data["y"]=data["y"]+y1_dir
+        if(data["y"]>servo_max):
+            data["y"]=servo_max
             y1_dir=-(servo_speed//2)
-        if(controller["y"]<servo_min):
-            controller["y"]=servo_min
+        if(data["y"]<servo_min):
+            data["y"]=servo_min
             y1_dir=servo_speed
-        controller["z"]+=z1_dir
-        if(controller["z"]>servo_max):
-            controller["z"]=servo_max
+        data["z"]=data["z"]+z1_dir
+        if(data["z"]>servo_max):
+            data["z"]=servo_max
             z1_dir=-(servo_speed//2)
-        if(controller["z"]<servo_min):
-            controller["z"]=servo_min
+        if(data["z"]<servo_min):
+            data["z"]=servo_min
             z1_dir=servo_speed
-
+        print(data)
     servos_write()
 

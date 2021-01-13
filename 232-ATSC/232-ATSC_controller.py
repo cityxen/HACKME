@@ -16,14 +16,15 @@ from random import randrange
 ######################################################################################
 # Set up some default variables
 hostname=socket.gethostname()
-g9ksct_version = "1.0"
+atsc_version   = "1.0"
 serial_device  = "/dev/ttyAMA0"
 serial_baud    = "9600"
 init_test      = False
 counter        = 0
 debug          = False
 
-print("CityXen 232-ATSC Controller %s - pass -h for help" % (g9ksct_version))
+print("CityXen 232-ATSC Controller %s - pass -h for help" % (atsc_version))
+print("Using: serial: %s @ %s baud"%(serial_device,serial_baud))
 
 ######################################################################################
 # Parse arguments
@@ -40,16 +41,9 @@ if(args["serial_baud"]):
     serial_baud = args["serial_baud"]
 ######################################################################################
 # Set up serial device 1
-ser1 = serial.Serial(
-    serial_device,
-    serial_baud,
-    bytesize=serial.EIGHTBITS,
-    parity=serial.PARITY_NONE,
-    stopbits=serial.STOPBITS_ONE,
-    xonxoff=0,
-    rtscts=0,
-    timeout=1
-    )
+ser1 = serial.Serial(serial_device,serial_baud,
+    bytesize=serial.EIGHTBITS,parity=serial.PARITY_NONE,stopbits=serial.STOPBITS_ONE,
+    xonxoff=0,rtscts=0,timeout=1)
 
 def dprint(x):
     if debug:
@@ -66,6 +60,7 @@ while True:
     c1=ser1.readline().lstrip('\x00').rstrip("\x00\n\r")
     if(len(c1)):
         # Do things with c1 input
+        print(c1)
         dprint("S1 RECVd:"+str(len(c1))+":"+c1)
 
     # Check key input

@@ -22,6 +22,10 @@ init_test     = True
 counter       = 0
 servo_speed   = 4
 
+controller1 = { "x_servo":0,"y_servo":1,"z_servo":2,"x":0,"y":0,"z":0 }
+controller2 = { "x_servo":3,"y_servo":4,"z_servo":5,"x":0,"y":0,"z":0 }
+controllers = { "1":controller1,"2":controller2 }
+
 print("CityXen Gladiator 9000 Servo Test %s - pass -h for help" % (g9kst_version))
 
 ######################################################################################
@@ -30,38 +34,46 @@ pwm = Adafruit_PCA9685.PCA9685() #pwm = Adafruit_PCA9685.PCA9685(address=0x41, b
 # Configure min and max servo pulse lengths
 servo_min = 150 # 150 # Min pulse length out of 4096
 servo_max = 600 # 600 # Max pulse length out of 4096
+servo_center = ((servo_max//2)+(servo_min//2))
 pwm.set_pwm_freq(60)# Set frequency to 60hz, good for servos.
 
 ######################################################################################
 # Helper functions to make setting a servo pulse width simpler.
 
-def servos_max():
-    pwm.set_pwm(0,0,servo_max)
-    pwm.set_pwm(1,0,servo_max)
-    pwm.set_pwm(2,0,servo_max)
-    pwm.set_pwm(3,0,servo_max)
-    pwm.set_pwm(4,0,servo_max)
-    pwm.set_pwm(5,0,servo_max)
-    pwm.set_pwm(6,0,servo_max)
+def servos_write():
+    pwm.set_pwm(controller1["x_servo"],0,controller1["x"])
+    pwm.set_pwm(controller1["y_servo"],0,controller1["y"])
+    pwm.set_pwm(controller1["z_servo"],0,controller1["z"])
+    pwm.set_pwm(controller2["x_servo"],0,controller2["x"])
+    pwm.set_pwm(controller2["y_servo"],0,controller2["y"])
+    pwm.set_pwm(controller2["z_servo"],0,controller2["z"])
 
+def servos_max():
+    controller1["x_servo"]=servo_max
+    controller1["y_servo"]=servo_max
+    controller1["z_servo"]=servo_max
+    controller2["x_servo"]=servo_max
+    controller2["y_servo"]=servo_max
+    controller2["z_servo"]=servo_max
+    servos_write()
+    
 def servos_center():
-    pwm.set_pwm(0,0,((servo_max//2)+(servo_min//2)))
-    pwm.set_pwm(1,0,((servo_max//2)+(servo_min//2)))
-    pwm.set_pwm(2,0,((servo_max//2)+(servo_min//2)))
-    pwm.set_pwm(3,0,((servo_max//2)+(servo_min//2)))
-    pwm.set_pwm(4,0,((servo_max//2)+(servo_min//2)))
-    pwm.set_pwm(5,0,((servo_max//2)+(servo_min//2)))
-    pwm.set_pwm(6,0,((servo_max//2)+(servo_min//2)))
+    controller1["x_servo"]=servo_center
+    controller1["y_servo"]=servo_center
+    controller1["z_servo"]=servo_center
+    controller2["x_servo"]=servo_center
+    controller2["y_servo"]=servo_center
+    controller2["z_servo"]=servo_center
+    servos_write()
 
 def servos_min():
-    pwm.set_pwm(0,0,servo_min)
-    pwm.set_pwm(1,0,servo_min)
-    pwm.set_pwm(2,0,servo_min)
-    pwm.set_pwm(3,0,servo_min)
-    pwm.set_pwm(4,0,servo_min)
-    pwm.set_pwm(5,0,servo_min)
-    pwm.set_pwm(6,0,servo_min)
-
+    controller1["x_servo"]=servo_min
+    controller1["y_servo"]=servo_min
+    controller1["z_servo"]=servo_min
+    controller2["x_servo"]=servo_min
+    controller2["y_servo"]=servo_min
+    controller2["z_servo"]=servo_min
+    servos_write()
 
 def set_servo_pulse(channel, pulse):
     pulse_length = 1000000    # 1,000,000 us per second
@@ -72,7 +84,6 @@ def set_servo_pulse(channel, pulse):
     pulse *= 1000
     pulse //= pulse_length
     pwm.set_pwm(channel, 0, pulse)
-
 
 ######################################################################################
 # Parse arguments
@@ -98,61 +109,43 @@ if(args["servo_center"]):
     servos_center()
     exit(0)
 
-xdir=servo_speed
-ydir=servo_speed
-zdir=servo_speed
+x1_dir=servo_speed
+y1_dir=servo_speed
+z1_dir=servo_speed
+x2_dir=servo_speed
+y2_dir=servo_speed
+z2_dir=servo_speed
 
-x=servo_max//2
-y=servo_max//2
-z=servo_max//2
-
-pwm.set_pwm(0,0,x)
-pwm.set_pwm(1,0,y)
-pwm.set_pwm(2,0,z)
-pwm.set_pwm(3,0,x)
-pwm.set_pwm(4,0,y)
-pwm.set_pwm(5,0,z)
-pwm.set_pwm(6,0,x)
+servos_center()
 
 while(True):
-    #global xdir
-    #global ydir
-    #global zdir
-    #global servo_speed
-
     # Put stuff here
-    outstr="x:%d y:%d z:%d xdir:%d ydir:%d zdir:%d"%(x,y,z,xdir,ydir,zdir)
-    print(outstr)
+    # outstr="x:%d y:%d z:%d xdir:%d ydir:%d zdir:%d"%(x,y,z,xdir,ydir,zdir)
+    # print(outstr)
 
-    x=x+xdir
-    if(x>servo_max):
-        x=servo_max
-        xdir=-(servo_speed//2)
-    if(x<servo_min):
-        x=servo_min
-        xdir=servo_speed
+    for controller in controllers:
+        print(controller)
+        controller["x"]+=x1_dir
+        if(controller["x"]>servo_max):
+            controller["x"]=servo_max
+            x1_dir=-(servo_speed//2)
+        if(controller["x"]<servo_min):
+            controller["x"]=servo_min
+            x1_dir=servo_speed
+        controller["y"]+=y1_dir
+        if(controller["y"]>servo_max):
+            controller["y"]=servo_max
+            y1_dir=-(servo_speed//2)
+        if(controller["y"]<servo_min):
+            controller["y"]=servo_min
+            y1_dir=servo_speed
+        controller["z"]+=z1_dir
+        if(controller["z"]>servo_max):
+            controller["z"]=servo_max
+            z1_dir=-(servo_speed//2)
+        if(controller["z"]<servo_min):
+            controller["z"]=servo_min
+            z1_dir=servo_speed
 
-    y=y+zdir
-    if(y>servo_max):
-        y=servo_max
-        ydir=-(servo_speed//2)
-    if(y<servo_min):
-        y=servo_min
-        ydir=servo_speed
-
-    z=z+zdir
-    if(z>servo_max):
-        z=servo_max
-        zdir=-(servo_speed//2)
-    if(z<servo_min):
-        z=servo_min
-        zdir=servo_speed
-
-    pwm.set_pwm(0,0,x)
-    pwm.set_pwm(1,0,y)
-    pwm.set_pwm(2,0,z)
-    pwm.set_pwm(3,0,x)
-    pwm.set_pwm(4,0,y)
-    pwm.set_pwm(5,0,z)
-    pwm.set_pwm(6,0,x)
+    servos_write()
 

@@ -50,10 +50,9 @@ speed = .1
 print("CityXen Gladiator 9000 Relay Test version %s" % (test_version))
 
 # Set up a dictionary for GPIO pins used for the relay up/down states
-#gp = {12:False, 7:False,11:False,13:False,15:False,19:False,21:False,23:False,16:False,18:False,22:False,40:False,38:False,36:False,32:False,37:False}
-gp2= {37:False,35:False,33:False,31:False,29:False,23:False,21:False,19:False}
-gp3= {15:False,13:False,11:False,7:False,12:False,16:False,18:False,22:False}
-gp4= {40:False,38:False,36:False,32:False}
+gp2 = { 37:False,35:False,33:False,31:False,29:False,23:False,21:False,19:False }
+gp3 = { 15:False,13:False,11:False,7:False,12:False,16:False,18:False,22:False }
+gp4 = { 40:False,38:False,36:False,32:False }
 
 # Set up GPIO device
 GPIO.setwarnings(True) # Ignore some warnings

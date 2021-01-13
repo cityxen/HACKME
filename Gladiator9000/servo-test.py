@@ -32,7 +32,7 @@ print("CityXen Gladiator 9000 Servo Test %s - pass -h for help" % (g9kst_version
 # Servo initialization stuff
 pwm = Adafruit_PCA9685.PCA9685() #pwm = Adafruit_PCA9685.PCA9685(address=0x41, busnum=2)
 # Configure min and max servo pulse lengths
-servo_min = 150 # 150 # Min pulse length out of 4096
+servo_min = 200 # 150 # Min pulse length out of 4096
 servo_max = 600 # 600 # Max pulse length out of 4096
 servo_center = ((servo_max//2)+(servo_min//2))
 pwm.set_pwm_freq(60)# Set frequency to 60hz, good for servos.

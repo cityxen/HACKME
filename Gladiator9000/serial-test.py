@@ -32,6 +32,7 @@ serial_device  = "/dev/ttyUSB0"
 serial_baud    = "1200"
 serial_device2 = "off"
 serial_baud2   = "1200"
+serial_timeout = .5
 init_test      = False
 counter        = 0
 debug          = False
@@ -68,7 +69,7 @@ ser1 = serial.Serial(
     stopbits=serial.STOPBITS_ONE,
     xonxoff=0,
     rtscts=0,
-    timeout=1
+    timeout=serial_timeout
     )
 
 ######################################################################################
@@ -82,8 +83,8 @@ if serial_device2!="off":
         stopbits=serial.STOPBITS_ONE,
         xonxoff=0,
         rtscts=0,
-        timeout=1
-        )    
+        timeout=serial_timeout
+        )
 
 outstring=hostname+" CityXen Gladiator 9000 Test now active\n"
 ser1.write(outstring)
@@ -117,30 +118,31 @@ while True:
     if(len(c1)):
         # Do things with c1 input
         dprint("S1 RECVd:"+str(len(c1))+":"+c1)
-        if serial_device2!="off":
-            c2=ser2.readline().lstrip('\x00').rstrip("\x00\n\r")
-            if(len(c2)):
-                #Do things with c2 input
-                dprint("S2 RECVd:"+str(len(c2))+":"+c2)        
+
+    if serial_device2!="off":
+        c2=ser2.readline().lstrip('\x00').rstrip("\x00\n\r")
+        if(len(c2)):
+            #Do things with c2 input
+            dprint("S2 RECVd:"+str(len(c2))+":"+c2)        
 
     # Write stuff
-    x=randrange(1000) # simulate packets
-    if x < 200:
+#    x=randrange(1000) # simulate packets
+#    if x < 200:
         # time.sleep(1)
-        counter1+=1
-        now = datetime.now()
-        dt_string = now.strftime("%d/%m/%Y %H:%M:%S")
-        ser1.write(b'%s:Write counter:%d:%s \n'%(dt_string,counter1,hostname))
-        if serial_device2!="off":
-            ser2.write(b'%s:Write counter:%d:%s \n'%(dt_string,counter1,hostname))
+#        counter1+=1
+#        now = datetime.now()
+#        dt_string = now.strftime("%d/%m/%Y %H:%M:%S")
+#        ser1.write(b'%s:Write counter:%d:%s \n'%(dt_string,counter1,hostname))
+#        if serial_device2!="off":
+#            ser2.write(b'%s:Write counter:%d:%s \n'%(dt_string,counter1,hostname))
 
 
     # Write heartbeat packet
-    counter=counter+1
-    if counter > 1000:
-        now = datetime.now()
-        dt_string = now.strftime("%d/%m/%Y %H:%M:%S")
-        ser1.write(b'%s:%s g9k test listening\n'%(dt_string,hostname))
-        if serial_device2!="off":
-            ser2.write(b'%s:%s g9k test listening\n'%(dt_string,hostname))
-        counter=0
+#    counter=counter+1
+#    if counter > 1000:
+#        now = datetime.now()
+#        dt_string = now.strftime("%d/%m/%Y %H:%M:%S")
+#        ser1.write(b'%s:%s g9k test listening\n'%(dt_string,hostname))
+#        if serial_device2!="off":
+#            ser2.write(b'%s:%s g9k test listening\n'%(dt_string,hostname))
+#        counter=0

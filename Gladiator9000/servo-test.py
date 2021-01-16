@@ -19,13 +19,10 @@ g9kst_version  = "1.0"
 init_test     = True
 counter       = 0
 servo_speed   = 4
-
 controller1 = { "x_servo":0,"y_servo":1,"z_servo":2,"x":0,"y":0,"z":0 }
 controller2 = { "x_servo":3,"y_servo":4,"z_servo":5,"x":0,"y":0,"z":0 }
 controllers = { "1":controller1,"2":controller2 }
-
 print(controllers)
-
 print("CityXen Gladiator 9000 Servo Test %s - pass -h for help" % (g9kst_version))
 
 ######################################################################################
@@ -39,7 +36,6 @@ pwm.set_pwm_freq(60)# Set frequency to 60hz, good for servos.
 
 ######################################################################################
 # Helper functions to make setting a servo pulse width simpler.
-
 def servos_write():
     pwm.set_pwm(controller1["x_servo"],0,controller1["x"])
     pwm.set_pwm(controller1["y_servo"],0,controller1["y"])

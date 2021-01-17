@@ -36,7 +36,18 @@ serial_timeout = .5
 init_test      = False
 counter        = 0
 debug          = False
+servos_enabled = True
 servo_speed    = 4
+servo_freq     = 60
+servo_min      = 200 # 150 # Min pulse length out of 4096
+servo_max      = 600 # 600 # Max pulse length out of 4096
+servo_center   = ((servo_max//2)+(servo_min//2))
+x1_dir         = servo_speed
+y1_dir         = servo_speed
+z1_dir         = servo_speed
+x2_dir         = servo_speed
+y2_dir         = servo_speed
+z2_dir         = servo_speed
 controller1    = { "x_servo":0,"y_servo":1,"z_servo":2,"x":0,"y":0,"z":0 }
 controller2    = { "x_servo":3,"y_servo":4,"z_servo":5,"x":0,"y":0,"z":0 }
 controllers    = { "1":controller1,"2":controller2 }
@@ -47,20 +58,6 @@ joyport_b1     = { "U":11,"UD":False,"D":7 ,"DD":False,"L":12,"LD":False,"R":16,
 joyport_b2     = { "U":22,"UD":False,"D":40,"DD":False,"L":38,"LD":False,"R":36,"RD":False,"F":32,"FD":False }
 
 print("CityXen Gladiator 9000 Server %s - pass -h for help" % (g9ks_version))
-######################################################################################
-# Servo initialization stuff - Configure min and max servo pulse lengths
-if(pwm == Adafruit_PCA9685.PCA9685()): #pwm = Adafruit_PCA9685.PCA9685(address=0x41, busnum=2)
-    pwm.set_pwm_freq(60)# Set frequency to 60hz, good for servos.
-servo_min    = 200 # 150 # Min pulse length out of 4096
-servo_max    = 600 # 600 # Max pulse length out of 4096
-servo_center = ((servo_max//2)+(servo_min//2))
-x1_dir       = servo_speed
-y1_dir       = servo_speed
-z1_dir       = servo_speed
-x2_dir       = servo_speed
-y2_dir       = servo_speed
-z2_dir       = servo_speed
-
 
 ######################################################################################
 # Some functions
@@ -71,12 +68,13 @@ def dprint(x):
         print(dt_string+":"+x)
 
 def servos_write():
-    pwm.set_pwm(controller1["x_servo"],0,controller1["x"])
-    pwm.set_pwm(controller1["y_servo"],0,controller1["y"])
-    pwm.set_pwm(controller1["z_servo"],0,controller1["z"])
-    pwm.set_pwm(controller2["x_servo"],0,controller2["x"])
-    pwm.set_pwm(controller2["y_servo"],0,controller2["y"])
-    pwm.set_pwm(controller2["z_servo"],0,controller2["z"])
+    if(servos_enabled):
+        pwm.set_pwm(controller1["x_servo"],0,controller1["x"])
+        pwm.set_pwm(controller1["y_servo"],0,controller1["y"])
+        pwm.set_pwm(controller1["z_servo"],0,controller1["z"])
+        pwm.set_pwm(controller2["x_servo"],0,controller2["x"])
+        pwm.set_pwm(controller2["y_servo"],0,controller2["y"])
+        pwm.set_pwm(controller2["z_servo"],0,controller2["z"])
 
 def servos_max():
     controller1["x"]=servo_max
@@ -191,6 +189,7 @@ ap.add_argument("-comm1b","--serial_baud",required=False,help="Serial Baud Rate"
 ap.add_argument("-comm2", "--serial_device2",required=False,help="Serial Device 2")
 ap.add_argument("-comm2b","--serial_baud2",required=False,help="Serial Baud Rate 2")
 # Servo stuff
+ap.add_argument("-ds",   "--disable_servos",required=False,help="Disable servos")
 ap.add_argument("-svs",  "--servo_speed",required=False,help="Set speed of servo test")
 ap.add_argument("-svmax","--servo_max",action="store_true",required=False,help="Set servos to maximum")
 ap.add_argument("-svmin","--servo_min",action="store_true",required=False,help="Set servos to minimum")
@@ -207,6 +206,8 @@ if(args["serial_device2"]):
     serial_device2=args["serial_device2"]
 if(args["serial_baud2"]):
     serial_baud2 = args["serial_baud2"]
+if(args["disable_servos"]):
+    servos_enabled=False
 if(args["servo_speed"]):
     servo_speed=(int(args["servo_speed"]))
 if(args["servo_max"]):
@@ -229,6 +230,13 @@ comm1 = serial.Serial(serial_device,serial_baud,xonxoff=0,rtscts=0,timeout=seria
 if serial_device2!="off":
     comm2 = serial.Serial(serial_device2,serial_baud2,xonxoff=0,rtscts=0,timeout=serial_timeout,
                          bytesize=serial.EIGHTBITS,parity=serial.PARITY_NONE,stopbits=serial.STOPBITS_ONE)
+
+######################################################################################
+# Servo initialization stuff - Configure min and max servo pulse lengths
+if(servos_enabled):
+    pwm = Adafruit_PCA9685.PCA9685()) #pwm = Adafruit_PCA9685.PCA9685(address=0x41, busnum=2)
+    pwm.set_pwm_freq(servo_freq)# Set frequency to 60hz, good for servos.
+
 
 ######################################################################################
 # Experimental AI dictionary (igonore)

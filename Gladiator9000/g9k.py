@@ -58,6 +58,7 @@ joyport_a2     = { "U":23,"UD":False,"D":21,"DD":False,"L":19,"LD":False,"R":15,
 joyport_b1     = { "U":11,"UD":False,"D":7 ,"DD":False,"L":12,"LD":False,"R":16,"RD":False,"F":18,"FD":False }
 joyport_b2     = { "U":22,"UD":False,"D":40,"DD":False,"L":38,"LD":False,"R":36,"RD":False,"F":32,"FD":False }
 
+print("#############################################################################")
 print("CityXen Gladiator 9000 Server %s - pass -h for help" % (g9ks_version))
 
 ######################################################################################
@@ -279,7 +280,10 @@ ai = {
     1: { "hands":controller1, "eyes": {1:joyport_a1, 2:joyport_a2}, "comm":comm1 },
     2: { "hands":controller2, "eyes": {1:joyport_b1, 2:joyport_b2}, "comm":comm2 }
 }
+print("#############################################################################")
+print("AI DATA:")
 print(ai)
+print("#############################################################################")
 
 ######################################################################################
 # Send Initial Messages
@@ -293,6 +297,7 @@ print("Using configuration:")
 print("Serial 1:"+serial_device+" at "+serial_baud+" baud")
 if serial_device2!="off":
     print("Serial 2:"+serial_device2+" at "+serial_baud2+" baud")
+print("#############################################################################")
 
 ######################################################################################
 # Main server program, take input from serial, then send out to servos

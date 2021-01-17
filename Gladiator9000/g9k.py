@@ -49,7 +49,8 @@ joyport_b2     = { "U":22,"UD":False,"D":40,"DD":False,"L":38,"LD":False,"R":36,
 print("CityXen Gladiator 9000 Server %s - pass -h for help" % (g9ks_version))
 ######################################################################################
 # Servo initialization stuff - Configure min and max servo pulse lengths
-pwm = Adafruit_PCA9685.PCA9685() #pwm = Adafruit_PCA9685.PCA9685(address=0x41, busnum=2)
+if(pwm = Adafruit_PCA9685.PCA9685()): #pwm = Adafruit_PCA9685.PCA9685(address=0x41, busnum=2)
+    pwm.set_pwm_freq(60)# Set frequency to 60hz, good for servos.
 servo_min    = 200 # 150 # Min pulse length out of 4096
 servo_max    = 600 # 600 # Max pulse length out of 4096
 servo_center = ((servo_max//2)+(servo_min//2))
@@ -59,7 +60,7 @@ z1_dir       = servo_speed
 x2_dir       = servo_speed
 y2_dir       = servo_speed
 z2_dir       = servo_speed
-pwm.set_pwm_freq(60)# Set frequency to 60hz, good for servos.
+
 
 ######################################################################################
 # Some functions

@@ -36,6 +36,7 @@ serial_timeout = .5
 init_test      = False
 counter        = 0
 debug          = False
+pwm            = 0
 servos_enabled = True
 servo_speed    = 4
 servo_freq     = 60
@@ -75,6 +76,13 @@ def servos_write():
         pwm.set_pwm(controller2["x_servo"],0,controller2["x"])
         pwm.set_pwm(controller2["y_servo"],0,controller2["y"])
         pwm.set_pwm(controller2["z_servo"],0,controller2["z"])
+    
+def init_servos():
+    global pwm
+    if(servos_enabled):
+        pwm = Adafruit_PCA9685.PCA9685() #pwm = Adafruit_PCA9685.PCA9685(address=0x41, busnum=2)
+        pwm.set_pwm_freq(servo_freq)# Set frequency to 60hz, good for servos.
+        servos_center()
 
 def servos_max():
     controller1["x"]=servo_max
@@ -112,7 +120,31 @@ def set_pulse(channel, pulse):
     pulse *= 1000
     pulse //= pulse_length
     pwm.set_pwm(channel, 0, pulse)
-    
+
+def init_gpio():
+    GPIO.setwarnings(True) # Ignore some warnings
+    GPIO.setmode(GPIO.BOARD)
+    GPIO.setup(joyport_a1["U"], GPIO.OUT) # Set pins to out
+    GPIO.setup(joyport_a1["D"], GPIO.OUT)
+    GPIO.setup(joyport_a1["L"], GPIO.OUT)
+    GPIO.setup(joyport_a1["R"], GPIO.OUT)
+    GPIO.setup(joyport_a1["F"], GPIO.OUT)
+    GPIO.setup(joyport_a2["U"], GPIO.OUT)
+    GPIO.setup(joyport_a2["D"], GPIO.OUT)
+    GPIO.setup(joyport_a2["L"], GPIO.OUT)
+    GPIO.setup(joyport_a2["R"], GPIO.OUT)
+    GPIO.setup(joyport_a2["F"], GPIO.OUT)
+    GPIO.setup(joyport_b1["U"], GPIO.OUT)
+    GPIO.setup(joyport_b1["D"], GPIO.OUT)
+    GPIO.setup(joyport_b1["L"], GPIO.OUT)
+    GPIO.setup(joyport_b1["R"], GPIO.OUT)
+    GPIO.setup(joyport_b1["F"], GPIO.OUT)
+    GPIO.setup(joyport_b2["U"], GPIO.OUT)
+    GPIO.setup(joyport_b2["D"], GPIO.OUT)
+    GPIO.setup(joyport_b2["L"], GPIO.OUT)
+    GPIO.setup(joyport_b2["R"], GPIO.OUT)
+    GPIO.setup(joyport_b2["F"], GPIO.OUT)
+
 def set_gpio(): # Relay stuff - Set the GPIO pins from dict values
     GPIO.output(joyport_a1["U"],joyport_a1["UD"])
     GPIO.output(joyport_a1["D"],joyport_a1["DD"])
@@ -226,7 +258,7 @@ if(args["servo_center"]):
 print("servos_enabled:%d" % (servos_enabled))
 
 ######################################################################################
-# Set up serial devices
+# Initialize serial devices
 comm1 = serial.Serial(serial_device,serial_baud,xonxoff=0,rtscts=0,timeout=serial_timeout,
                      bytesize=serial.EIGHTBITS,parity=serial.PARITY_NONE,stopbits=serial.STOPBITS_ONE)
 if serial_device2!="off":
@@ -234,10 +266,12 @@ if serial_device2!="off":
                          bytesize=serial.EIGHTBITS,parity=serial.PARITY_NONE,stopbits=serial.STOPBITS_ONE)
 
 ######################################################################################
-# Servo initialization stuff - Configure min and max servo pulse lengths
-if(servos_enabled):
-    pwm = Adafruit_PCA9685.PCA9685() #pwm = Adafruit_PCA9685.PCA9685(address=0x41, busnum=2)
-    pwm.set_pwm_freq(servo_freq)# Set frequency to 60hz, good for servos.
+# Initialize GPIO device
+init_gpio()
+
+######################################################################################
+# Initialize Servos
+init_servos()
 
 ######################################################################################
 # Experimental AI dictionary (igonore)
@@ -248,7 +282,7 @@ ai = {
 print(ai)
 
 ######################################################################################
-# Send Online Messages
+# Send Initial Messages
 outstring=hostname+" CityXen Gladiator 9000 Online\n"
 comm1.write(outstring)
 if serial_device2!="off":
@@ -259,21 +293,6 @@ print("Using configuration:")
 print("Serial 1:"+serial_device+" at "+serial_baud+" baud")
 if serial_device2!="off":
     print("Serial 2:"+serial_device2+" at "+serial_baud2+" baud")
-
-######################################################################################
-# Set up GPIO device
-GPIO.setwarnings(True) # Ignore some warnings
-GPIO.setmode(GPIO.BOARD)
-for i in gp2:
-    GPIO.setup(i, GPIO.OUT) # Set pins to out
-for i in gp3:
-    GPIO.setup(i, GPIO.OUT) # Set pins to out
-for i in gp4:
-    GPIO.setup(i, GPIO.OUT) # Set pins to out
-
-######################################################################################
-# Center Servos
-servos_center()
 
 ######################################################################################
 # Main server program, take input from serial, then send out to servos

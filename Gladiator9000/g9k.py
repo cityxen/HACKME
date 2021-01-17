@@ -236,7 +236,7 @@ if serial_device2!="off":
 ######################################################################################
 # Servo initialization stuff - Configure min and max servo pulse lengths
 if(servos_enabled):
-    pwm = Adafruit_PCA9685.PCA9685()) #pwm = Adafruit_PCA9685.PCA9685(address=0x41, busnum=2)
+    pwm = Adafruit_PCA9685.PCA9685() #pwm = Adafruit_PCA9685.PCA9685(address=0x41, busnum=2)
     pwm.set_pwm_freq(servo_freq)# Set frequency to 60hz, good for servos.
 
 ######################################################################################

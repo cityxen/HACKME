@@ -1,5 +1,3 @@
-#!/usr/local/bin/python
-# -*- coding: utf-8 -*-
 #######################################################################################
 # Gladiator 9000
 #
@@ -25,6 +23,7 @@ import RPi.GPIO as GPIO
 import serial
 import socket
 import time
+import sys
 
 ######################################################################################
 # Set up some default variables
@@ -59,6 +58,8 @@ joyport_a1     = { "U":37,"UD":False,"D":35,"DD":False,"L":33,"LD":False,"R":31,
 joyport_a2     = { "U":23,"UD":False,"D":21,"DD":False,"L":19,"LD":False,"R":15,"RD":False,"F":13,"FD":False }
 joyport_b1     = { "U":11,"UD":False,"D":7 ,"DD":False,"L":12,"LD":False,"R":16,"RD":False,"F":18,"FD":False }
 joyport_b2     = { "U":22,"UD":False,"D":40,"DD":False,"L":38,"LD":False,"R":36,"RD":False,"F":32,"FD":False }
+
+sys.stdout.reconfigure(encoding='utf-8')
 
 print("#############################################################################")
 print("")

@@ -123,7 +123,8 @@ def set_pulse(channel, pulse):
     pwm.set_pwm(channel, 0, pulse)
 
 def init_gpio():
-    GPIO.setwarnings(True) # Ignore some warnings
+    # GPIO.setwarnings(True) # Ignore some warnings
+    GPIO.setwarnings(False)
     GPIO.setmode(GPIO.BOARD)
     GPIO.setup(joyport_a1["U"], GPIO.OUT) # Set pins to out
     GPIO.setup(joyport_a1["D"], GPIO.OUT)

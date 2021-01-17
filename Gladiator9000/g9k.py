@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
 #######################################################################################
 # Gladiator 9000
 #
@@ -23,7 +25,6 @@ import RPi.GPIO as GPIO
 import serial
 import socket
 import time
-import sys
 
 ######################################################################################
 # Set up some default variables
@@ -59,19 +60,30 @@ joyport_a2     = { "U":23,"UD":False,"D":21,"DD":False,"L":19,"LD":False,"R":15,
 joyport_b1     = { "U":11,"UD":False,"D":7 ,"DD":False,"L":12,"LD":False,"R":16,"RD":False,"F":18,"FD":False }
 joyport_b2     = { "U":22,"UD":False,"D":40,"DD":False,"L":38,"LD":False,"R":36,"RD":False,"F":32,"FD":False }
 
-sys.stdout.reconfigure(encoding='utf-8')
+print("\x1b[1;33;40m"+"░█░█░█░█░█░█░█░█░█░█░█░█░█░█░█░█░█░█░█░█░█░█░█░█░█░█░█░█░█"+"\x1b[3;32;40m")
+print("\x1b[1;30;40m"+"                                                          "+"\x1b[0;33;40m")
+print("\x1b[3;33;40m"+"                █▀▀ █ ▀█▀ █▄█ ▀▄▀ █▀▀ █▄░█                "+"\x1b[0;33;40m")
+print("\x1b[3;33;40m"+"                █▄▄ █ ░█░ ░█░ █░█ ██▄ █░▀█                "+"\x1b[0;33;40m")
+print("\x1b[1;30;40m"+"                                                          "+"\x1b[0;33;40m")
+print("\x1b[3;32;40m"+"              8 & 16 bit hijinx and programming!          "+"\x1b[0;33;40m")
+print("\x1b[1;30;40m"+"                                                          "+"\x1b[0;33;40m")
+print("\x1b[1;31;40m"+"   ░█▀▀█ ░█─── ─█▀▀█ ░█▀▀▄ ▀█▀ ─█▀▀█ ▀▀█▀▀ ░█▀▀▀█ ░█▀▀█ 　"+"\x1b[0;33;40m")
+print("\x1b[1;31;40m"+"   ░█─▄▄ ░█─── ░█▄▄█ ░█─░█ ░█─ ░█▄▄█ ─░█── ░█──░█ ░█▄▄▀ 　"+"\x1b[0;33;40m")
+print("\x1b[1;31;40m"+"   ░█▄▄█ ░█▄▄█ ░█─░█ ░█▄▄▀ ▄█▄ ░█─░█ ─░█── ░█▄▄▄█ ░█─░█ 　"+"\x1b[0;33;40m")
+print("\x1b[1;30;40m"+"                                                          "+"\x1b[0;33;40m")
+print("\x1b[1;33;40m"+"             ░█████╗░░█████╗░░█████╗░░█████╗░"+"\x1b[0;33;40m")
+print("\x1b[1;33;40m"+"             ██╔══██╗██╔══██╗██╔══██╗██╔══██╗"+"\x1b[0;33;40m")
+print("\x1b[1;33;40m"+"             ╚██████║██║░░██║██║░░██║██║░░██║"+"\x1b[0;33;40m")
+print("\x1b[1;33;40m"+"             ░╚═══██║██║░░██║██║░░██║██║░░██║"+"\x1b[0;33;40m")
+print("\x1b[1;33;40m"+"             ░█████╔╝╚█████╔╝╚█████╔╝╚█████╔╝"+"\x1b[0;33;40m")
+print("\x1b[1;33;40m"+"             ░╚════╝░░╚════╝░░╚════╝░░╚════╝░"+"\x1b[0;33;40m")
 
-print("#############################################################################")
+print("\x1b[3;32;40m")
+print("  http://Youtube.com/CityXen    http://linktr.ee/cityxen")
 print("")
-print("█▀▀ █ ▀█▀ █▄█ ▀▄▀ █▀▀ █▄░")
-print("█▄▄ █ ░█░ ░█░ █░█ ██▄ █░█")
+print("  CityXen Gladiator 9000 Server %s - pass -h for help" % (g9ks_version))
 print("")
-print("8 & 16 bit hijinx and programming!")
-print("")
-print("http://Youtube.com/CityXen http://linktr.ee/cityxen")
-print("")
-print("CityXen Gladiator 9000 Server %s - pass -h for help" % (g9ks_version))
-print("")
+print("\x1b[1;33;40m"+"░█░█░█░█░█░█░█░█░█░█░█░█░█░█░█░█░█░█░█░█░█░█░█░█░█░█░█░█░█"+"\x1b[3;32;40m")
 
 ######################################################################################
 # Some functions
@@ -230,10 +242,10 @@ def all_off(): # Turn all dict values to off
 ap=argparse.ArgumentParser()
 # Serial stuff
 ap.add_argument("-d",    "--debug",required=False,help="Show Debug Output")
-ap.add_argument("-comm1", "--serial_device",required=False,help="Serial Device")
-ap.add_argument("-comm1b","--serial_baud",required=False,help="Serial Baud Rate")
-ap.add_argument("-comm2", "--serial_device2",required=False,help="Serial Device 2")
-ap.add_argument("-comm2b","--serial_baud2",required=False,help="Serial Baud Rate 2")
+ap.add_argument("-ser1", "--serial_device",required=False,help="Serial Device")
+ap.add_argument("-ser1b","--serial_baud",required=False,help="Serial Baud Rate")
+ap.add_argument("-ser2", "--serial_device2",required=False,help="Serial Device 2")
+ap.add_argument("-ser2b","--serial_baud2",required=False,help="Serial Baud Rate 2")
 # Servo stuff
 ap.add_argument("-ds",   "--disable_servos",required=False,help="Disable servos")
 ap.add_argument("-svs",  "--servo_speed",required=False,help="Set speed of servo test")
@@ -287,7 +299,7 @@ init_servos()
 
 ######################################################################################
 # Send Initial Messages
-print("#############################################################################")
+print("\x1b[1;33;40m"+"░█░█░█░█░█░█░█░█░█░█░█░█░█░█░█░█░█░█░█░█░█░█░█░█░█░█░█░█░█"+"\x1b[3;32;40m")
 outstring=hostname+" CityXen Gladiator 9000 Online\n"
 comm1.write(outstring)
 if serial_device2!="off":
@@ -300,7 +312,7 @@ if serial_device2!="off":
     print("Serial 2:"+serial_device2+" at "+serial_baud2+" baud")
     
 print("Servos Enabled: %d" % (servos_enabled))
-print("#############################################################################")
+print("\x1b[1;33;40m"+"░█░█░█░█░█░█░█░█░█░█░█░█░█░█░█░█░█░█░█░█░█░█░█░█░█░█░█░█░█"+"\x1b[3;32;40m")
 ######################################################################################
 # Experimental AI dictionary (igonore)
 ai = {
@@ -309,7 +321,7 @@ ai = {
 }
 print("AI DATA:")
 print(ai)
-print("#############################################################################")
+print("\x1b[1;33;40m"+"░█░█░█░█░█░█░█░█░█░█░█░█░█░█░█░█░█░█░█░█░█░█░█░█░█░█░█░█░█"+"\x1b[3;32;40m")
 ######################################################################################
 # Main server program, take input from serial, then send out to servos
 while True:

@@ -223,7 +223,7 @@ if(args["servo_center"]):
     servos_center()
     exit(0)
 
-print("servos_enabled:%d",%{servos_enabled})
+print("servos_enabled:%d" % (servos_enabled))
 
 ######################################################################################
 # Set up serial devices

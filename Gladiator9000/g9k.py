@@ -223,6 +223,8 @@ if(args["servo_center"]):
     servos_center()
     exit(0)
 
+print("servos_enabled:%d"%{servos_enabled})
+
 ######################################################################################
 # Set up serial devices
 comm1 = serial.Serial(serial_device,serial_baud,xonxoff=0,rtscts=0,timeout=serial_timeout,
@@ -236,7 +238,6 @@ if serial_device2!="off":
 if(servos_enabled):
     pwm = Adafruit_PCA9685.PCA9685()) #pwm = Adafruit_PCA9685.PCA9685(address=0x41, busnum=2)
     pwm.set_pwm_freq(servo_freq)# Set frequency to 60hz, good for servos.
-
 
 ######################################################################################
 # Experimental AI dictionary (igonore)

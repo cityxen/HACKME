@@ -59,7 +59,16 @@ joyport_b1     = { "U":11,"UD":False,"D":7 ,"DD":False,"L":12,"LD":False,"R":16,
 joyport_b2     = { "U":22,"UD":False,"D":40,"DD":False,"L":38,"LD":False,"R":36,"RD":False,"F":32,"FD":False }
 
 print("#############################################################################")
+print("")
+print("█▀▀ █ ▀█▀ █▄█ ▀▄▀ █▀▀ █▄░")
+print("█▄▄ █ ░█░ ░█░ █░█ ██▄ █░█")
+print("")
+print("8 & 16 bit hijinx and programming!")
+print("")
+print("http://Youtube.com/CityXen http://linktr.ee/cityxen")
+print("")
 print("CityXen Gladiator 9000 Server %s - pass -h for help" % (g9ks_version))
+print("")
 
 ######################################################################################
 # Some functions
@@ -257,8 +266,6 @@ if(args["servo_center"]):
     servos_center()
     exit(0)
 
-print("servos_enabled:%d" % (servos_enabled))
-
 ######################################################################################
 # Initialize serial devices
 comm1 = serial.Serial(serial_device,serial_baud,xonxoff=0,rtscts=0,timeout=serial_timeout,
@@ -276,18 +283,8 @@ init_gpio()
 init_servos()
 
 ######################################################################################
-# Experimental AI dictionary (igonore)
-ai = {
-    1: { "hands":controller1, "eyes": {1:joyport_a1, 2:joyport_a2}, "comm":comm1 },
-    2: { "hands":controller2, "eyes": {1:joyport_b1, 2:joyport_b2}, "comm":comm2 }
-}
-print("#############################################################################")
-print("AI DATA:")
-print(ai)
-print("#############################################################################")
-
-######################################################################################
 # Send Initial Messages
+print("#############################################################################")
 outstring=hostname+" CityXen Gladiator 9000 Online\n"
 comm1.write(outstring)
 if serial_device2!="off":
@@ -298,8 +295,18 @@ print("Using configuration:")
 print("Serial 1:"+serial_device+" at "+serial_baud+" baud")
 if serial_device2!="off":
     print("Serial 2:"+serial_device2+" at "+serial_baud2+" baud")
+    
+print("Servos Enabled: %d" % (servos_enabled))
 print("#############################################################################")
-
+######################################################################################
+# Experimental AI dictionary (igonore)
+ai = {
+    1: { "hands":controller1, "eyes": {1:joyport_a1, 2:joyport_a2}, "comm":comm1 },
+    2: { "hands":controller2, "eyes": {1:joyport_b1, 2:joyport_b2}, "comm":comm2 }
+}
+print("AI DATA:")
+print(ai)
+print("#############################################################################")
 ######################################################################################
 # Main server program, take input from serial, then send out to servos
 while True:

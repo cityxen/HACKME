@@ -41,7 +41,6 @@ controller1    = { "x_servo":0,"y_servo":1,"z_servo":2,"x":0,"y":0,"z":0 }
 controller2    = { "x_servo":3,"y_servo":4,"z_servo":5,"x":0,"y":0,"z":0 }
 controllers    = { "1":controller1,"2":controller2 }
 relay_speed    = .5
-
 joyport_a1     = { "U":37,"UD":False,"D":35,"DD":False,"L":33,"LD":False,"R":31,"RD":False,"F":29,"FD":False } # Assign GPIO (Relay) to Joyport interfaces
 joyport_a2     = { "U":23,"UD":False,"D":21,"DD":False,"L":19,"LD":False,"R":15,"RD":False,"F":13,"FD":False }
 joyport_b1     = { "U":11,"UD":False,"D":7 ,"DD":False,"L":12,"LD":False,"R":16,"RD":False,"F":18,"FD":False }
@@ -186,10 +185,10 @@ def all_off(): # Turn all dict values to off
 ap=argparse.ArgumentParser()
 # Serial stuff
 ap.add_argument("-d",    "--debug",required=False,help="Show Debug Output")
-ap.add_argument("-ser1", "--serial_device",required=False,help="Serial Device")
-ap.add_argument("-ser1b","--serial_baud",required=False,help="Serial Baud Rate")
-ap.add_argument("-ser2", "--serial_device2",required=False,help="Serial Device 2")
-ap.add_argument("-ser2b","--serial_baud2",required=False,help="Serial Baud Rate 2")
+ap.add_argument("-comm1", "--serial_device",required=False,help="Serial Device")
+ap.add_argument("-comm1b","--serial_baud",required=False,help="Serial Baud Rate")
+ap.add_argument("-comm2", "--serial_device2",required=False,help="Serial Device 2")
+ap.add_argument("-comm2b","--serial_baud2",required=False,help="Serial Baud Rate 2")
 # Servo stuff
 ap.add_argument("-svs",  "--servo_speed",required=False,help="Set speed of servo test")
 ap.add_argument("-svmax","--servo_max",action="store_true",required=False,help="Set servos to maximum")
@@ -224,18 +223,33 @@ if(args["servo_center"]):
 
 ######################################################################################
 # Set up serial devices
-ser1 = serial.Serial(serial_device,serial_baud,xonxoff=0,rtscts=0,timeout=serial_timeout,
+comm1 = serial.Serial(serial_device,serial_baud,xonxoff=0,rtscts=0,timeout=serial_timeout,
                      bytesize=serial.EIGHTBITS,parity=serial.PARITY_NONE,stopbits=serial.STOPBITS_ONE)
 if serial_device2!="off":
-    ser2 = serial.Serial(serial_device2,serial_baud2,xonxoff=0,rtscts=0,timeout=serial_timeout,
+    comm2 = serial.Serial(serial_device2,serial_baud2,xonxoff=0,rtscts=0,timeout=serial_timeout,
                          bytesize=serial.EIGHTBITS,parity=serial.PARITY_NONE,stopbits=serial.STOPBITS_ONE)
+
+######################################################################################
+# Experimental AI dictionary (igonore)
+ai = {
+    1: {
+        "hands":controller1,
+        "eyes": { 1:joyport_a1, 2:joyport_a2 },
+        "comm":comm1
+        },
+    2: {
+        "hands":controller2,
+        "eyes": { 1:joyport_b1, 2:joyport_b2 }
+        "comm":comm2
+    }
+}
 
 ######################################################################################
 # Send Online Messages
 outstring=hostname+" CityXen Gladiator 9000 Online\n"
-ser1.write(outstring)
+comm1.write(outstring)
 if serial_device2!="off":
-    ser2.write(outstring)
+    comm2.write(outstring)
 print("CityXen Gladiator 9000 Online")
 print("Host: "+hostname)
 print("Using configuration:")
@@ -262,13 +276,13 @@ servos_center()
 # Main server program, take input from serial, then send out to servos
 while True:
     # Do serial stuff
-    c1=ser1.readline().lstrip('\x00').rstrip("\x00\n\r")
+    c1=comm1.readline().lstrip('\x00').rstrip("\x00\n\r")
     if(len(c1)):
         # Do things with c1 input
         dprint("S1 RECVd:"+str(len(c1))+":"+c1)
 
     if serial_device2!="off":
-        c2=ser2.readline().lstrip('\x00').rstrip("\x00\n\r")
+        c2=comm2.readline().lstrip('\x00').rstrip("\x00\n\r")
         if(len(c2)):
             #Do things with c2 input
             dprint("S2 RECVd:"+str(len(c2))+":"+c2)  

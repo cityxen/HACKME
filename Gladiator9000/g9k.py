@@ -235,6 +235,7 @@ ai = {
     1: { "hands":controller1, "eyes": {1:joyport_a1, 2:joyport_a2}, "comm":comm1 },
     2: { "hands":controller2, "eyes": {1:joyport_b1, 2:joyport_b2}, "comm":comm2 }
 }
+print(ai)
 
 ######################################################################################
 # Send Online Messages

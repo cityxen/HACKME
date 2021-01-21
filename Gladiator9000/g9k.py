@@ -13,6 +13,8 @@
 #
 # pyserial
 # https://github.com/adafruit/Adafruit_Python_PCA9685
+# Example motion tracking:
+# https://opensource.com/article/20/1/object-tracking-camera-raspberry-pi
 #
 #######################################################################################
 

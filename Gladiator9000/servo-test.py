@@ -52,7 +52,7 @@ def servos_max():
     controller2["y"]=servo_max
     controller2["z"]=servo_max
     servos_write()
-    
+
 def servos_center():
     controller1["x"]=servo_center
     controller1["y"]=servo_center
@@ -121,24 +121,26 @@ while(True):
         data["x"]=data["x"]+x1_dir
         if(data["x"]>servo_max):
             data["x"]=servo_max
-            x1_dir=-(servo_speed//2)
+            x1_dir=-servo_speed #(servo_speed//2)
         if(data["x"]<servo_min):
             data["x"]=servo_min
             x1_dir=servo_speed
         data["y"]=data["y"]+y1_dir
         if(data["y"]>servo_max):
             data["y"]=servo_max
-            y1_dir=-(servo_speed//2)
+            y1_dir=-servo_speed #(servo_speed//2)
         if(data["y"]<servo_min):
             data["y"]=servo_min
             y1_dir=servo_speed
         data["z"]=data["z"]+z1_dir
         if(data["z"]>servo_max):
             data["z"]=servo_max
-            z1_dir=-(servo_speed//2)
+            z1_dir=-servo_speed #(servo_speed//2)
         if(data["z"]<servo_min):
             data["z"]=servo_min
             z1_dir=servo_speed
-        print(data)
+        #print(data)
+        #print(servo_speed)
+    time.sleep(1)
     servos_write()
 

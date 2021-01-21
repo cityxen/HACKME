@@ -34,7 +34,7 @@ hostname=socket.gethostname()
 g9ks_version   = "1.0"
 serial_device  = "/dev/ttyUSB0"
 serial_baud    = "1200"
-serial_device2 = "/dev/ttyAMA0" # "off"
+serial_device2 = "/dev/ttyUSB1" # "off"
 serial_baud2   = "1200"
 serial_timeout = .5
 init_test      = False
@@ -119,7 +119,7 @@ def servos_max():
     controller2["y"]=servo_max
     controller2["z"]=servo_max
     servos_write()
-    
+
 def servos_center():
     controller1["x"]=servo_center
     controller1["y"]=servo_center
@@ -302,7 +302,7 @@ init_servos()
 ######################################################################################
 # Send Initial Messages
 print("\x1b[1;33;40m"+"░█░█░█░█░█░█░█░█░█░█░█░█░█░█░█░█░█░█░█░█░█░█░█░█░█░█░█░█░█"+"\x1b[3;32;40m")
-outstring=hostname+" CityXen Gladiator 9000 Online\n"
+outstring=hostname+" CityXen Gladiator 9000 Online\n\r"
 comm1.write(outstring)
 if serial_device2!="off":
     comm2.write(outstring)
@@ -312,7 +312,7 @@ print("Using configuration:")
 print("Serial 1:"+serial_device+" at "+serial_baud+" baud")
 if serial_device2!="off":
     print("Serial 2:"+serial_device2+" at "+serial_baud2+" baud")
-    
+
 print("Servos Enabled: %d" % (servos_enabled))
 print("\x1b[1;33;40m"+"░█░█░█░█░█░█░█░█░█░█░█░█░█░█░█░█░█░█░█░█░█░█░█░█░█░█░█░█░█"+"\x1b[3;32;40m")
 ######################################################################################

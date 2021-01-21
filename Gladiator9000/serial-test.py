@@ -1,19 +1,8 @@
 #######################################################################################
-# Gladiator 9000 Servo Controller Server (Test Program)
+# Gladiator 9000 Serial Test Program
 #
 # 2021 CityXen
 #
-# Takes input from 2 rs-232 serial ports and converts that to servo control
-#
-# rs-232 Port 1 controls servos (x1,y1,z1)
-# rs-232 Port 2 controls servos (x2,y2,z2)
-#
-# Pinout for serial ports:
-# rs-232 Port 1:
-#
-# rs-232 Port 2:
-#
-# 
 ######################################################################################
 
 from __future__ import division
@@ -27,7 +16,7 @@ from random import randrange
 ######################################################################################
 # Set up some default variables
 hostname=socket.gethostname()
-g9ksct_version = "1.0"
+g9kst_version  = "1.0"
 serial_device  = "/dev/ttyUSB0"
 serial_baud    = "1200"
 serial_device2 = "off"
@@ -37,7 +26,7 @@ init_test      = False
 counter        = 0
 debug          = False
 
-print("CityXen Gladiator 9000 Servo Controller Server Test %s - pass -h for help" % (g9ksct_version))
+print("CityXen Gladiator 9000 Serial Test %s - pass -h for help" % (g9kst_version))
 
 ######################################################################################
 # Parse arguments
@@ -86,7 +75,7 @@ if serial_device2!="off":
         timeout=serial_timeout
         )
 
-outstring=hostname+" CityXen Gladiator 9000 Test now active\n"
+outstring="\n\r"+hostname+"\n\rCityXen Gladiator 9000 Test now active\n\r"
 ser1.write(outstring)
 if serial_device2!="off":
     ser2.write(outstring)
@@ -126,15 +115,16 @@ while True:
             dprint("S2 RECVd:"+str(len(c2))+":"+c2)        
 
     # Write stuff
-#    x=randrange(1000) # simulate packets
-#    if x < 200:
+    x=randrange(1000) # simulate packets
+    if x < 200:
         # time.sleep(1)
-#        counter1+=1
-#        now = datetime.now()
-#        dt_string = now.strftime("%d/%m/%Y %H:%M:%S")
-#        ser1.write(b'%s:Write counter:%d:%s \n'%(dt_string,counter1,hostname))
-#        if serial_device2!="off":
-#            ser2.write(b'%s:Write counter:%d:%s \n'%(dt_string,counter1,hostname))
+        counter1+=1
+        now = datetime.now()
+        dt_string = now.strftime("%d/%m/%Y %H:%M:%S")
+        ser1.write(b'%s:%d \n\r'%(hostname,counter1))
+        if serial_device2!="off":
+            ser2.write(b'%s:%d \n\r'%(hostname,counter1))
+#            ser2.write(b'%s:Write counter:%d:%s \n\r'%(dt_string,counter1,hostname))
 
 
     # Write heartbeat packet

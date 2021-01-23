@@ -117,7 +117,7 @@ while True:
 
     # Write stuff
     x=randrange(1000) # simulate packets
-    if x < 200:
+    if x < 500:
         # time.sleep(1)
         counter1+=1
         now = datetime.now()

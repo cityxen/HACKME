@@ -1,15 +1,19 @@
-.label up9600_load=$8df
+.label up9600_load=$941
 .label jprl1=$876
 .label to_screen=$8b1
-.label up9600_filename=$8f7
+.label up9600_filename=$959
 .label down2=$8ce
 .label main_loop=$866
 .label tslp=$8b3
 .label down1=$8c9
+.label up9600_write=$8d2
 .label joyport_read=$872
+.label up9600_tmp=$92f
 .label up2=$8cd
 .label up1=$8c8
+.label up9600_counter=$929
 .label program=$815
+.label up9600_write_string=$921
 .label right1=$8cb
 .label right2=$8d0
 .label no_rs232=$842
@@ -20,4 +24,4 @@
 .label button1=$8cc
 .label ts2=$8bf
 .label ts1=$8bd
-.label up9600_read=$8d2
+.label up9600_read=$930

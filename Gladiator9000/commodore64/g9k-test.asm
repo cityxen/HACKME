@@ -135,12 +135,69 @@ left2:   .byte 0
 right2:  .byte 0
 button2: .byte 0
 
+up9600_write:
+    ldx #$00
+!wl:
+    lda up9600_write_string,x
+    beq !wl+
+    sta up9600_tmp
+    txa
+    pha
+    lda up9600_tmp    
+    jsr $c0dd
+    pla
+    tax
+    inx
+    jmp !wl-
+!wl:
+    inc up9600_counter+4    
+    lda up9600_counter+4
+    cmp #$3a
+    bne !wl++
+    lda #$30
+    sta up9600_counter+4
+    inc up9600_counter+3
+!wl:
+    lda up9600_counter+3
+    cmp #$3a
+    bne !wl+
+    lda #$30
+    sta up9600_counter+3
+!wl:
+
+    ldx #$00
+!wl:
+    lda up9600_counter,x
+    beq !wl+
+    sta up9600_tmp
+    txa
+    pha
+    lda up9600_tmp    
+    jsr $c0dd
+    pla
+    tax
+    inx
+    jmp !wl-
+!wl:
+    rts
+
+up9600_write_string:
+.text "clicky:"
+.byte 0
+up9600_counter:
+.text "00000"
+.byte 0
+up9600_tmp:
+.byte 0
+
 up9600_read:
     clc
     jsr $c0b9
     bcs !over+
     jsr KERNAL_CHROUT
-    jsr $c0dd
+    cmp #$0d
+    bne !over+
+    jsr up9600_write
 !over:
     rts
 

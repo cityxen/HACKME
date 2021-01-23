@@ -89,19 +89,14 @@ counter1=0
 
 def dprint(x):
     if debug:
-        #x=x.replace('\r', '')
-        #x=x.replace('\n', '')
         print("debug:"+x)
         #print(ord(x[0]))
         #print(ord(x[-1]))
 
-outstring="\x147\n\r\n\r"+hostname+"\n\rCityXen Gladiator 9000 Test now active\n\r"
+outstring="\n\rCityXen Gladiator 9000 Test now active\n\r"
 ser1.write(outstring)
 if serial_device2!="off":
     ser2.write(outstring)
-
-print(" ")
-print(" ")
 
 ######################################################################################
 # Main server program, take input from serial, then send out to servos
@@ -123,22 +118,9 @@ while True:
     # Write stuff
     x=randrange(1000) # simulate packets
     if x < 300:
-        # time.sleep(1)
         counter1+=1
         now = datetime.now()
         dt_string = now.strftime("%d/%m/%Y %H:%M:%S")
         ser1.write(b'%s:%d \n\r'%(hostname,counter1))
         if serial_device2!="off":
             ser2.write(b'%s:%d \n\r'%(hostname,counter1))
-#            ser2.write(b'%s:Write counter:%d:%s \n\r'%(dt_string,counter1,hostname))
-
-
-    # Write heartbeat packet
-#    counter=counter+1
-#    if counter > 1000:
-#        now = datetime.now()
-#        dt_string = now.strftime("%d/%m/%Y %H:%M:%S")
-#        ser1.write(b'%s:%s g9k test listening\n'%(dt_string,hostname))
-#        if serial_device2!="off":
-#            ser2.write(b'%s:%s g9k test listening\n'%(dt_string,hostname))
-#        counter=0

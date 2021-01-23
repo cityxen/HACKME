@@ -26,8 +26,8 @@
 .segment Main [allowOverlap]
 *=$0801 "BASIC"
  :BasicUpstart($0815)
-//*=$080a "cITYxEN wORDS"
-//.byte $3a,99,67,73,84,89,88,69,78,99
+*=$080a "cITYxEN wORDS"
+.byte $3a,99,67,73,84,89,88,69,78,99
 *=$0815 "MAIN PROGRAM"
 
 program:

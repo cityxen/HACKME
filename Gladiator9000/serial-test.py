@@ -22,7 +22,9 @@ serial_device  = "/dev/ttyUSB0"
 serial_baud    = "1200"
 serial_device2 = "off"
 serial_baud2   = "1200"
-serial_timeout = .5
+serial_timeout = .6
+serial_xonxoff = False
+serial_rtscts  = False
 init_test      = False
 counter        = 0
 debug          = False
@@ -57,8 +59,8 @@ ser1 = serial.Serial(
     bytesize=serial.EIGHTBITS,
     parity=serial.PARITY_NONE,
     stopbits=serial.STOPBITS_ONE,
-    xonxoff=0,
-    rtscts=0,
+    xonxoff=serial_xonxoff,
+    rtscts=serial_rtscts,
     timeout=serial_timeout
     )
 
@@ -71,15 +73,10 @@ if serial_device2!="off":
         bytesize=serial.EIGHTBITS,
         parity=serial.PARITY_NONE,
         stopbits=serial.STOPBITS_ONE,
-        xonxoff=0,
-        rtscts=0,
+        xonxoff=serial_xonxoff,
+        rtscts=serial_rtscts,
         timeout=serial_timeout
         )
-
-outstring="\n\r"+hostname+"\n\rCityXen Gladiator 9000 Test now active\n\r"
-ser1.write(outstring)
-if serial_device2!="off":
-    ser2.write(outstring)
 
 print("CityXen Gladiator 9000 Test now active")
 print("Host: "+hostname)
@@ -92,11 +89,19 @@ counter1=0
 
 def dprint(x):
     if debug:
-        # datetime object containing current date and time
-        now = datetime.now()
-        dt_string = now.strftime("%d/%m/%Y %H:%M:%S")
-        print(dt_string+":"+x)
+        #x=x.replace('\r', '')
+        #x=x.replace('\n', '')
+        print("debug:"+x)
+        #print(ord(x[0]))
+        #print(ord(x[-1]))
 
+outstring="\x147\n\r\n\r"+hostname+"\n\rCityXen Gladiator 9000 Test now active\n\r"
+ser1.write(outstring)
+if serial_device2!="off":
+    ser2.write(outstring)
+
+print(" ")
+print(" ")
 
 ######################################################################################
 # Main server program, take input from serial, then send out to servos
@@ -104,20 +109,20 @@ while True:
     # Do Server things
 
     # Read stuff
-    c1=ser1.readline().lstrip('\x00').rstrip("\x00\n\r")
+    c1=ser1.readline().lstrip('\x00\n\r').rstrip("\x00\n\r")
     if(len(c1)):
         # Do things with c1 input
-        dprint("S1 RECVd:"+str(len(c1))+":"+c1)
+        dprint("COMM1 Rx:"+str(len(c1))+":"+c1)
 
     if serial_device2!="off":
-        c2=ser2.readline().lstrip('\x00').rstrip("\x00\n\r")
+        c2=ser2.readline().lstrip('\x00\n\r').rstrip("\x00\n\r")
         if(len(c2)):
             #Do things with c2 input
-            dprint("S2 RECVd:"+str(len(c2))+":"+c2)        
+            dprint("COMM2 Rx:"+str(len(c2))+":"+c2)
 
     # Write stuff
     x=randrange(1000) # simulate packets
-    if x < 500:
+    if x < 300:
         # time.sleep(1)
         counter1+=1
         now = datetime.now()

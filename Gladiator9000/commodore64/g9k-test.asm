@@ -1,16 +1,18 @@
 ////////////////////////////////////////////////////////////////
-//  Commodore 64 joystick reading routine
+// Gladiator 9000 Client for the Commodore 64
 // 
-// 2021 CityXen
+// 2021 Deadline / Xamfear / CityXen
+//
+// https://linktr.ee/cityxen
 // 
 // UP9600 Driver: $c000
+// 
 // $dc01 = port 1
 // $dc00 = port 2
 //
 //////////////////////////////////////////////////////////////////////////////////////
-
+// Initial defines and imports
 .segmentdef up9600
-
 #import "../../Commodore64_Programming/include/Constants.asm"
 
 //////////////////////////////////////////////////////////////////////////////////////
@@ -23,6 +25,8 @@
     [name="UP9600.C64", type="prg", prgFiles="up9600-driver/up9600.bin"]
 }
 
+//////////////////////////////////////////////////////////////////////////////////////
+// BASIC Upstart stuff
 .segment Main [allowOverlap]
 *=$0801 "BASIC"
  :BasicUpstart($0815)
@@ -30,10 +34,10 @@
 .byte $3a,99,67,73,84,89,88,69,78,99
 *=$0815 "MAIN PROGRAM"
 
+//////////////////////////////////////////////////////////////////////////////////////
+// Program start
 program:
-
-    // INITIALIZE STUFF
-    lda #$00
+    lda #$00 // INITIALIZE STUFF
     sta BACKGROUND_COLOR
     sta BORDER_COLOR
     lda #$93
@@ -58,21 +62,24 @@ program:
 rs232found:
     jmp main_loop
     rts
-    //////////////////////////////////////////////////////////////////////////////////////
 
 no_rs232:
 .encoding "petscii_mixed"
 .text "Can not find RS-232 userport device"
 .byte 0
+    //////////////////////////////////////////////////////////////////////////////////////
 
+//////////////////////////////////////////////////////////////////////////////////////
+// Main Loop
 main_loop:
     jsr up9600_read
     jsr joyport_read 
     jsr to_screen
     jmp main_loop
 
+//////////////////////////////////////////////////////////////////////////////////////
+// Joyport read stuff
 joyport_read:
-
     lda #$00
     ldx #$00
 jprl1:
@@ -80,7 +87,6 @@ jprl1:
     inx
     cpx #$0a
     bne jprl1
-
     lda $dc01
     and #$1f
     lsr
@@ -107,6 +113,8 @@ jprl1:
     ror button2
     rts
 
+//////////////////////////////////////////////////////////////////////////////////////
+// Print Joyport status to screen
 to_screen:
     ldx #$00
 tslp:
@@ -123,18 +131,21 @@ ts2:
     bne tslp
     rts
 
+//////////////////////////////////////////////////////////////////////////////////////
+// Joyport data stuff
 up1:     .byte 0
 down1:   .byte 0
 left1:   .byte 0
 right1:  .byte 0
 button1: .byte 0
-
 up2:     .byte 0
 down2:   .byte 0
 left2:   .byte 0
 right2:  .byte 0
 button2: .byte 0
 
+//////////////////////////////////////////////////////////////////////////////////////
+// UP9600 write routine
 up9600_write:
     ldx #$00
 !wl:
@@ -164,7 +175,6 @@ up9600_write:
     lda #$30
     sta up9600_counter+3
 !wl:
-
     ldx #$00
 !wl:
     lda up9600_counter,x
@@ -190,6 +200,8 @@ up9600_counter:
 up9600_tmp:
 .byte 0
 
+//////////////////////////////////////////////////////////////////////////////////////
+// UP9600 read routine
 up9600_read:
     clc
     jsr $c0b9
@@ -201,6 +213,8 @@ up9600_read:
 !over:
     rts
 
+//////////////////////////////////////////////////////////////////////////////////////
+// UP9600 load from disk routine
 up9600_load:
     lda #$ba
     ldx #$08
@@ -213,7 +227,7 @@ up9600_load:
     lda #00
     jsr KERNAL_LOAD
     rts
-    
+
 up9600_filename:
 .encoding "screencode_mixed"
 .text "UP9600.C64"

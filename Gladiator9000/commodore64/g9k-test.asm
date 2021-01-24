@@ -60,7 +60,7 @@ program:
 !out:
     rts
 rs232found:
-    jsr up9600_zero_read_string // zero read string buffer 
+    jsr up9600_zero_strbuf // zero read string buffer 
     lda #$0d
     jsr KERNAL_CHROUT
     jmp main_loop
@@ -243,11 +243,6 @@ up9600_read:
     
     ldx buf_crsr 
     sta strbuf,x // store the string in read string buffer (256 bytes)
-    //jsr KERNAL_CHROUT
-    //lda buf_crsr
-    //jsr print_hex
-    //ldx buf_crsr
-    //lda strbuf,x
     inc buf_crsr
     
     cmp #$0d
@@ -271,11 +266,16 @@ up9600_parse:
     bne !np+
     // send ident string
     jsr up9600_identify
+    jmp parse_en
+    
+    // add other things here
+
 !np:
-    jsr up9600_zero_read_string
+parse_end:
+    jsr up9600_zero_strbuf
     rts
 
-up9600_zero_read_string:
+up9600_zero_strbuf:
     lda #$00
     ldx #$00
 !lp:
@@ -286,14 +286,7 @@ up9600_zero_read_string:
     rts
 
 strbuf:
-.byte 0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0
-.byte 0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0
-.byte 0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0
-.byte 0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0
-.byte 0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0
-.byte 0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0
-.byte 0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0
-.byte 0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0
+.fill 256,0
 
 buf_crsr:
 .byte 0

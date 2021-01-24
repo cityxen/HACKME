@@ -18,7 +18,7 @@
 //////////////////////////////////////////////////////////////////////////////////////
 // File stuff
 .file [name="g9k-test.prg", segments="Main,up9600"]
-.file [name="UP9600.C64", segments="Main"]
+// .file [name="UP9600.C64", segments="Default,Main"]
 .disk [filename="g9k-test.d64", name="CITYXEN G9KTEST", id="2021!" ] {
     [name="G9K-TEST", type="prg",  segments="Main,up9600"],
     [name="UP9600-BASIC.PRG", type="prg", prgFiles="up9600-driver/up9600-basic.prg"],
@@ -61,6 +61,8 @@ program:
     rts
 rs232found:
     jsr up9600_zero_read_string // zero read string buffer 
+    lda #$0d
+    jsr KERNAL_CHROUT
     jmp main_loop
     rts
 
@@ -117,6 +119,14 @@ jprl1:
 //////////////////////////////////////////////////////////////////////////////////////
 // Print Joyport status to screen
 to_screen:
+    ldx #$00
+    lda #$20
+!lp:
+    sta $040a,x
+    inx
+    cpx #$1d
+    bne !lp-
+
     ldx #$00
 tslp:
     lda up1,x
@@ -211,7 +221,8 @@ up9600_identify:
     rts
 
 up9600_ident:
-.text "i am a commodore 64"
+.encoding "ascii" // "screencode_mixed"
+.text "IDENTIFY:C64"
 .byte 0
 up9600_write_string:
 .text "c64:"
@@ -229,9 +240,18 @@ up9600_read:
     bcc !over+
     rts
 !over:
-    ldx up9600_string_buffer_cursor // store the string in read string buffer (256 bytes)
-    inc up9600_string_buffer_cursor
-    sta up9600_string_buffer,x
+    
+    ldx buf_crsr 
+    sta strbuf,x // store the string in read string buffer (256 bytes)
+    //jsr KERNAL_CHROUT
+    //lda buf_crsr
+    //jsr print_hex
+    //ldx buf_crsr
+    //lda strbuf,x
+    inc buf_crsr
+    
+    cmp #$0d
+    beq up9600_parse
     cmp #$0a
     beq up9600_parse
     rts
@@ -239,40 +259,44 @@ up9600_read:
 up9600_parse:
     ldx #$00
 !lp:
-    lda up9600_string_buffer,x
+    lda strbuf,x
     jsr KERNAL_CHROUT // test by putting output to screen
     inx
-    
-    cpx up9600_string_buffer_cursor
+    cpx buf_crsr
     bne !lp-
 
-    // add parsing here
-    ldx #$00
-    lda up9600_string_buffer,x
-    cmp #"i"
+    // add parsing here (first character will direct what to do)
+    lda strbuf
+    cmp #$69 // identify string sent
     bne !np+
     // send ident string
     jsr up9600_identify
-
-
 !np:
     jsr up9600_zero_read_string
     rts
 
 up9600_zero_read_string:
     lda #$00
-    sta up9600_string_buffer_cursor
     ldx #$00
 !lp:
-    sta up9600_string_buffer,x
+    sta strbuf,x
     inx
     bne !lp-
+    stx buf_crsr
     rts
 
-up9600_string_buffer_cursor:
+strbuf:
+.byte 0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0
+.byte 0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0
+.byte 0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0
+.byte 0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0
+.byte 0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0
+.byte 0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0
+.byte 0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0
+.byte 0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0
+
+buf_crsr:
 .byte 0
-up9600_string_buffer:
-.fill 256,0
 
 //////////////////////////////////////////////////////////////////////////////////////
 // UP9600 load from disk routine
@@ -293,3 +317,24 @@ up9600_filename:
 .encoding "screencode_mixed"
 .text "UP9600.C64"
 .byte 0
+
+print_hex:
+    pha
+    pha
+    lsr
+    lsr
+    lsr
+    lsr
+    tax
+    lda hex_conv_table,x
+    jsr KERNAL_CHROUT
+    pla
+    and #$0f
+    tax
+    lda hex_conv_table,x
+    jsr KERNAL_CHROUT
+    pla
+    rts
+
+hex_conv_table:
+.byte $30,$31,$32,$33,$34,$35,$36,$37,$38,$39,$41,$42,$43,$44,$45,$46

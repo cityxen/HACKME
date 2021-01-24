@@ -9,7 +9,7 @@ ftp -inv $HOST <<EOF
 user $USER $PASSWORD
 cd Usb1/github/HACKME/Gladiator9000/commodore64/prg_files
 delete g9k-test.d64
-lcd /home/pi/HACKME/Gladiator9000/commodore64/prg_files
+lcd prg_files
 binary
 put g9k-test.d64
 delete g9k-test.prg

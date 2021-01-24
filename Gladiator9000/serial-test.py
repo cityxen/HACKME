@@ -89,7 +89,7 @@ counter1=0
 
 def dprint(x):
     if debug:
-        print("debug:"+x)
+        print("Debug:"+x)
         #print(ord(x[0]))
         #print(ord(x[-1]))
 
@@ -124,3 +124,11 @@ while True:
         ser1.write(b'%s:%d \n\r'%(hostname,counter1))
         if serial_device2!="off":
             ser2.write(b'%s:%d \n\r'%(hostname,counter1))
+
+    x=randrange(1000) # send a ident request
+    if x < 200:
+        string="identify"
+        ser1.write(b'%s\n\r'%(string))
+        if serial_device2!="off":
+            ser2.write(b'%s\n\r'%(string))
+

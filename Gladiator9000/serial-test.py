@@ -78,7 +78,7 @@ if serial_device2!="off":
         timeout=serial_timeout
         )
 
-print("CityXen Gladiator 9000 Test now active")
+# print("cityXen gladiator 9000 online")
 print("Host: "+hostname)
 print("Using configuration:")
 print("Serial 1:"+serial_device+" at "+serial_baud+" baud")
@@ -89,11 +89,11 @@ counter1=0
 
 def dprint(x):
     if debug:
-        print("Debug:"+x)
+        print("Debug:"+x.lstrip('\x00\n\r').rstrip("\x00\n\r"))
         #print(ord(x[0]))
         #print(ord(x[-1]))
 
-outstring="\n\rCityXen Gladiator 9000 Test now active\n\r"
+outstring="\n\r\x9ecITYxEN \x9cgladiator \x9e9000 \x1eonline\n\r"
 ser1.write(outstring)
 if serial_device2!="off":
     ser2.write(outstring)
@@ -121,12 +121,14 @@ while True:
         counter1+=1
         now = datetime.now()
         dt_string = now.strftime("%d/%m/%Y %H:%M:%S")
-        ser1.write(b'%s:%d \n\r'%(hostname,counter1))
+	dprint(b'COMM# Tx:%s:%d\n\r'%(hostname,counter1))
+        ser1.write(b'%s:%d\n\r'%(hostname,counter1))
         if serial_device2!="off":
-            ser2.write(b'%s:%d \n\r'%(hostname,counter1))
+            ser2.write(b'%s:%d\n\r'%(hostname,counter1))
 
     x=randrange(1000) # send a ident request
     if x < 200:
+	dprint("COMM# Tx:IDENTIFY")
         string="identify"
         ser1.write(b'%s\n\r'%(string))
         if serial_device2!="off":

@@ -249,12 +249,10 @@ up9600_parse:
     // add parsing here
     ldx #$00
     lda up9600_string_buffer,x
-    cmp #"i"
+    cmp #$69 // identify string sent
     bne !np+
     // send ident string
     jsr up9600_identify
-
-
 !np:
     jsr up9600_zero_read_string
     rts

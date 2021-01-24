@@ -1,10 +1,7 @@
 #!/bin/bash
 kickass g9k-test.asm
-HOST=192.168.1.5
-USER=deadline
-PASSWORD=pw
-ftp -inv $HOST <<EOF
-user $USER $PASSWORD
+ftp -inv 192.168.1.5 <<EOF
+user guest guest
 cd Usb1/github/HACKME/Gladiator9000/commodore64/prg_files
 delete g9k-test.d64
 lcd prg_files

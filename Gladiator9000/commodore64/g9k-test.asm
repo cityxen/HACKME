@@ -220,6 +220,27 @@ up9600_identify:
 !wl:
     rts
 
+up9600_ata:
+    ldx #$00
+!wl:
+    lda up9600_ata_str,x
+    beq !wl+
+    sta up9600_tmp
+    txa
+    pha
+    lda up9600_tmp  
+    jsr $c0dd
+    pla
+    tax
+    inx
+    jmp !wl-
+!wl:
+    rts
+
+up9600_ata_str:
+.encoding "petscii_mixed"
+.text "ata"
+.byte 0
 up9600_ident:
 .encoding "ascii" // "screencode_mixed"
 .text "IDENTIFY:C64"
@@ -262,15 +283,18 @@ up9600_parse:
 
     // add parsing here (first character will direct what to do)
     lda strbuf
-    cmp #$69 // identify string sent
+    cmp #$69 // I (identify string sent)
     bne !np+
     // send ident string
     jsr up9600_identify
-    jmp parse_en
-    
-    // add other things here
-
+    jmp parse_end
 !np:
+    cmp #$52 // r (ring)
+    bne !np+
+    jsr up9600_ata
+    jmp parse_end
+!np:
+
 parse_end:
     jsr up9600_zero_strbuf
     rts

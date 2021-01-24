@@ -156,7 +156,100 @@ right2:  .byte 0
 button2: .byte 0
 
 //////////////////////////////////////////////////////////////////////////////////////
-// UP9600 write routine
+// UP9600 string buffer data
+strbuf:
+.fill 256,0
+buf_crsr:
+.byte 
+
+//////////////////////////////////////////////////////////////////////////////////////
+// UP9600 read
+up9600_read:
+    jsr $c0b9
+    bcc !over+
+    rts
+!over:
+    ldx buf_crsr 
+    sta strbuf,x // store the string in read string buffer (256 bytes)
+    inc buf_crsr
+    cmp #$0d
+    beq up9600_parse
+    cmp #$0a
+    beq up9600_parse
+    rts
+
+//////////////////////////////////////////////////////////////////////////////////////
+// UP9600 parse
+up9600_parse:
+    ldx #$00
+!lp:
+    lda strbuf,x
+    jsr KERNAL_CHROUT // test by putting output to screen
+    inx
+    cpx buf_crsr
+    bne !lp-
+    // add parsing here (first character will direct what to do)
+    lda strbuf
+    cmp #$69 // I (identify string sent)
+    bne !np+
+    // send ident string
+    lda #<up9600_ident
+    sta zp_tmp_hi
+    lda #>up9600_ident
+    sta zp_tmp_lo
+    jsr up9600_write_2
+    // jsr up9600_identify
+    jmp parse_end
+// !np:
+    // cmp #$52 // r (ring)
+    // bne !np+
+    // jsr up9600_ata
+    // jmp parse_end
+!np:
+parse_end:
+    jsr up9600_zero_strbuf
+    rts
+
+//////////////////////////////////////////////////////////////////////////////////////
+// UP9600 zero local string buffer
+up9600_zero_strbuf:
+    lda #$00
+    ldx #$00
+!lp:
+    sta strbuf,x
+    inx
+    bne !lp-
+    stx buf_crsr
+    rts
+
+//////////////////////////////////////////////////////////////////////////////////////
+// UP9600 write 2 routine
+up9600_write_2:
+    // uses zero page pointer to string which you have to set up prior to calling
+    // ie;
+    // lda #> up9600_write_string
+    // sta zp_tmp_hi 
+    // lda #< up9600_write_string
+    // sta zp_tmp_lo
+    // jsr up9600_write_2
+    ldx #$00
+!wl:
+    lda (zp_tmp,x)
+    beq !wl+
+    sta up9600_tmp
+    txa
+    pha
+    lda up9600_tmp  
+    jsr $c0dd
+    pla
+    tax
+    inx
+    jmp !wl-
+!wl:
+    rts
+
+//////////////////////////////////////////////////////////////////////////////////////
+// UP9600 write (original)
 up9600_write:
     ldx #$00
 !wl:
@@ -201,8 +294,7 @@ up9600_write:
     jmp !wl-
 !wl:
     rts
-
-
+/*
 up9600_identify:
     ldx #$00
 !wl:
@@ -219,30 +311,12 @@ up9600_identify:
     jmp !wl-
 !wl:
     rts
+*/
 
-up9600_ata:
-    ldx #$00
-!wl:
-    lda up9600_ata_str,x
-    beq !wl+
-    sta up9600_tmp
-    txa
-    pha
-    lda up9600_tmp  
-    jsr $c0dd
-    pla
-    tax
-    inx
-    jmp !wl-
-!wl:
-    rts
-
-up9600_ata_str:
-.encoding "petscii_mixed"
-.text "ata"
-.byte 0
+//////////////////////////////////////////////////////////////////////////////////////
+// UP9600 write data
 up9600_ident:
-.encoding "ascii" // "screencode_mixed"
+.encoding "ascii" // "screencode_mixed" "petscii_mixed" "screencode_lower" "petscii_lower"
 .text "IDENTIFY:C64"
 .byte 0
 up9600_write_string:
@@ -252,67 +326,6 @@ up9600_counter:
 .text "00"
 .byte 0
 up9600_tmp:
-.byte 0
-
-//////////////////////////////////////////////////////////////////////////////////////
-// UP9600 read / parse routine
-up9600_read:
-    jsr $c0b9
-    bcc !over+
-    rts
-!over:
-    
-    ldx buf_crsr 
-    sta strbuf,x // store the string in read string buffer (256 bytes)
-    inc buf_crsr
-    
-    cmp #$0d
-    beq up9600_parse
-    cmp #$0a
-    beq up9600_parse
-    rts
-
-up9600_parse:
-    ldx #$00
-!lp:
-    lda strbuf,x
-    jsr KERNAL_CHROUT // test by putting output to screen
-    inx
-    cpx buf_crsr
-    bne !lp-
-
-    // add parsing here (first character will direct what to do)
-    lda strbuf
-    cmp #$69 // I (identify string sent)
-    bne !np+
-    // send ident string
-    jsr up9600_identify
-    jmp parse_end
-!np:
-    cmp #$52 // r (ring)
-    bne !np+
-    jsr up9600_ata
-    jmp parse_end
-!np:
-
-parse_end:
-    jsr up9600_zero_strbuf
-    rts
-
-up9600_zero_strbuf:
-    lda #$00
-    ldx #$00
-!lp:
-    sta strbuf,x
-    inx
-    bne !lp-
-    stx buf_crsr
-    rts
-
-strbuf:
-.fill 256,0
-
-buf_crsr:
 .byte 0
 
 //////////////////////////////////////////////////////////////////////////////////////
@@ -335,6 +348,8 @@ up9600_filename:
 .text "UP9600.C64"
 .byte 0
 
+//////////////////////////////////////////////////////////////////////////////////////
+// Print HEX representation of a byte. usage: lda #$15;  jsr print_hex
 print_hex:
     pha
     pha
@@ -343,15 +358,15 @@ print_hex:
     lsr
     lsr
     tax
-    lda hex_conv_table,x
+    lda print_hex_conv_table,x
     jsr KERNAL_CHROUT
     pla
     and #$0f
     tax
-    lda hex_conv_table,x
+    lda print_hex_conv_table,x
     jsr KERNAL_CHROUT
     pla
     rts
 
-hex_conv_table:
+print_hex_conv_table:
 .byte $30,$31,$32,$33,$34,$35,$36,$37,$38,$39,$41,$42,$43,$44,$45,$46

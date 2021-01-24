@@ -60,7 +60,7 @@ program:
 !out:
     rts
 rs232found:
-    jsr up9600_zero_read_string // zero read string buffer 
+    jsr up9600_zero_strbuf // zero read string buffer 
     lda #$0d
     jsr KERNAL_CHROUT
     jmp main_loop
@@ -220,6 +220,27 @@ up9600_identify:
 !wl:
     rts
 
+up9600_ata:
+    ldx #$00
+!wl:
+    lda up9600_ata_str,x
+    beq !wl+
+    sta up9600_tmp
+    txa
+    pha
+    lda up9600_tmp  
+    jsr $c0dd
+    pla
+    tax
+    inx
+    jmp !wl-
+!wl:
+    rts
+
+up9600_ata_str:
+.encoding "petscii_mixed"
+.text "ata"
+.byte 0
 up9600_ident:
 .encoding "ascii" // "screencode_mixed"
 .text "IDENTIFY:C64"
@@ -243,11 +264,6 @@ up9600_read:
     
     ldx buf_crsr 
     sta strbuf,x // store the string in read string buffer (256 bytes)
-    //jsr KERNAL_CHROUT
-    //lda buf_crsr
-    //jsr print_hex
-    //ldx buf_crsr
-    //lda strbuf,x
     inc buf_crsr
     
     cmp #$0d
@@ -267,15 +283,23 @@ up9600_parse:
 
     // add parsing here (first character will direct what to do)
     lda strbuf
-    cmp #$69 // identify string sent
+    cmp #$69 // I (identify string sent)
     bne !np+
     // send ident string
     jsr up9600_identify
+    jmp parse_end
 !np:
-    jsr up9600_zero_read_string
+    cmp #$52 // r (ring)
+    bne !np+
+    jsr up9600_ata
+    jmp parse_end
+!np:
+
+parse_end:
+    jsr up9600_zero_strbuf
     rts
 
-up9600_zero_read_string:
+up9600_zero_strbuf:
     lda #$00
     ldx #$00
 !lp:
@@ -286,14 +310,7 @@ up9600_zero_read_string:
     rts
 
 strbuf:
-.byte 0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0
-.byte 0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0
-.byte 0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0
-.byte 0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0
-.byte 0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0
-.byte 0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0
-.byte 0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0
-.byte 0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0
+.fill 256,0
 
 buf_crsr:
 .byte 0

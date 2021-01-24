@@ -12,15 +12,13 @@
 //
 //////////////////////////////////////////////////////////////////////////////////////
 // Initial defines and imports
-.segmentdef up9600
 #import "../../../Commodore64_Programming/include/Constants.asm"
 
 //////////////////////////////////////////////////////////////////////////////////////
 // File stuff
-.file [name="g9k-test.prg", segments="Main,up9600"]
-// .file [name="UP9600.C64", segments="Default,Main"]
+.file [name="g9k-test.prg", segments="Main"]
 .disk [filename="g9k-test.d64", name="CITYXEN G9KTEST", id="2021!" ] {
-    [name="G9K-TEST", type="prg",  segments="Main,up9600"],
+    [name="G9K-TEST", type="prg",  segments="Main"],
     [name="UP9600-BASIC.PRG", type="prg", prgFiles="up9600-driver/up9600-basic.prg"],
     [name="UP9600.C64", type="prg", prgFiles="up9600-driver/up9600.bin"]
 }

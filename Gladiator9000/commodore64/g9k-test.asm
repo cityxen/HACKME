@@ -60,6 +60,7 @@ program:
 !out:
     rts
 rs232found:
+    jsr up9600_zero_read_string // zero read string buffer 
     jmp main_loop
     rts
 
@@ -161,19 +162,19 @@ up9600_write:
     inx
     jmp !wl-
 !wl:
-    inc up9600_counter+4    
-    lda up9600_counter+4
+    inc up9600_counter+1    
+    lda up9600_counter+1
     cmp #$3a
     bne !wl++
     lda #$30
-    sta up9600_counter+4
-    inc up9600_counter+3
+    sta up9600_counter+1
+    inc up9600_counter
 !wl:
-    lda up9600_counter+3
+    lda up9600_counter
     cmp #$3a
     bne !wl+
     lda #$30
-    sta up9600_counter+3
+    sta up9600_counter
 !wl:
     ldx #$00
 !wl:
@@ -192,26 +193,53 @@ up9600_write:
     rts
 
 up9600_write_string:
-.text "clicky:"
+.text "c64:"
 .byte 0
 up9600_counter:
-.text "00000"
+.text "00"
 .byte 0
 up9600_tmp:
 .byte 0
 
 //////////////////////////////////////////////////////////////////////////////////////
-// UP9600 read routine
+// UP9600 read / parse routine
 up9600_read:
-    clc
     jsr $c0b9
-    bcs !over+
-    jsr KERNAL_CHROUT
-    cmp #$0d
-    bne !over+
-    jsr up9600_write
-!over:
+    bcc !over+
     rts
+!over:
+    ldx up9600_read_string_cursor // store the string in read string buffer (256 bytes)
+    inc up9600_read_string_cursor
+    sta up9600_read_string,x    
+    cmp #$0d // is the string finished?
+    beq up9600_parse
+    rts
+up9600_parse:
+    ldx #$00
+!lp:
+    lda up9600_read_string,x
+    inx
+    cpx #up9600_read_string_cursor
+    bne !lp-
+    jsr KERNAL_CHROUT // test by putting output to screen
+    jsr up9600_zero_read_string
+    // add parsing here
+    rts
+
+up9600_zero_read_string:
+    lda #$00
+    sta up9600_read_string_cursor
+    ldx #$00
+!lp:
+    sta up9600_read_string,x
+    inx
+    bne !lp-
+    rts
+
+up9600_read_string_cursor:
+.byte 0
+up9600_read_string:
+.fill 256,0
 
 //////////////////////////////////////////////////////////////////////////////////////
 // UP9600 load from disk routine

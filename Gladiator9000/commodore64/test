@@ -1,0 +1,2 @@
+java -jar /home/pi/bin/KickAss.jar g9k-test.asm
+x64 prg_files/g9k-test.d64

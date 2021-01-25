@@ -93,7 +93,7 @@ def dprint(x):
         #print(ord(x[0]))
         #print(ord(x[-1]))
 
-outstring="\n\r\x9ecITYxEN \x9cgladiator \x9e9000 \x1eonline\n\r"
+outstring="\n\r\x93\x0d\x9ecITYxEN \x9cgladiator \x9e9000 \x1eonline\n\r"
 ser1.write(outstring)
 if serial_device2!="off":
     ser2.write(outstring)

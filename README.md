@@ -1,7 +1,7 @@
 # 🌆🅲🅸🆃🆈🆇🅴🅽☯️ 8 & 16 bit hijinx and programming!
 
 # HACKME
-## HACKME Catalog
+## HACKME Corporation Catalog
 
 Software for controlling the various HACKME products
 

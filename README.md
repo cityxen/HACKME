@@ -1,6 +1,9 @@
 # 🌆🅲🅸🆃🆈🆇🅴🅽☯️ 8 & 16 bit hijinx and programming!
 
 # HACKME
+
+![hackme corp](https://github.com/cityxen/HACKME/blob/main/images/hackme%20(3).png)
+
 ## HACKME Corporation Catalog
 
 Software for controlling the various HACKME products

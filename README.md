@@ -11,16 +11,14 @@ The purpose of this library is to create middleware hardware solutions for retro
 If there is software for specific machines such as the commodore64, there will be a folder for it in the top folder of that project.
 
 ### Click-A-Tron
-Serial to relay board bridge
+RS-232 Serial to Relay Board Bridge
 
 ### 232-ATSC 
-C64 joystick servo controller
-
-### Contest-O-Thon
-Stay Tuned
+Atari/C64 Joystick Servo Controller
 
 ### Gladiator9000
-Gives retro computers the capability to play pong against each other. Servo controls, joystick inputs, and serial input stuff all going at once through the gpio on raspi
+Gives retro computers the capability to play pong against each other - Servo controls, joystick inputs, & serial input
+
 ![g9k](https://github.com/cityxen/HACKME/blob/main/images/hackme%20(1).png)
 
 ## PUPPET

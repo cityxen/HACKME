@@ -3,6 +3,10 @@
 # Click-A-Tron
 ## Raspberry Pi middleware interface that allows vintage computers to use relay boards
 
+More details here:
+http://cityxen.net/2022/04/the-hackme-click-o-tron/
+
+
 This is a python script that runs when the Raspberry Pi boots. It listens on the rs-232 serial port at 9600 baud for 16 character strings of 1 and 0.
 
 ### Example of input from vintage computers:
@@ -25,5 +29,7 @@ python Click-A-Tron.py -b 19200 -t 1 -e 16B
 python Click-A-Tron.py
 ```
 
-
+![cat1](https://github.com/cityxen/HACKME/blob/main/Click-A-Tron/images/1%20(1).jpg)
+![cat2](https://github.com/cityxen/HACKME/blob/main/Click-A-Tron/images/1%20(3).jpg)
+![cat3](https://github.com/cityxen/HACKME/blob/main/Click-A-Tron/images/1%20(11).jpg)
 
